@@ -4364,6 +4364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 880008000}
   - component: {fileID: 880008001}
+  - component: {fileID: 880008002}
   m_Layer: 0
   m_Name: Robot
   m_TagString: Untagged
@@ -4401,6 +4402,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stageJson: {fileID: 4900000, guid: 873eb46c90294e84598144a128987e3b, type: 3}
+--- !u!114 &880008002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880007999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93b3d70c2df3a964e9a9a87e7854aee5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  rotationSpeed: 180
 --- !u!1 &885237320
 GameObject:
   m_ObjectHideFlags: 0
