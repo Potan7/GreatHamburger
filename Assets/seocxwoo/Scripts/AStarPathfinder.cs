@@ -67,6 +67,7 @@ public static class AStarPathfinder
         }
 
         pathList.Reverse();
+        pathList.RemoveAt(0);
 
         return pathList;
     }

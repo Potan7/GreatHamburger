@@ -21,10 +21,12 @@ public class RobotMovement : MonoBehaviour
         foreach (Vector2Int point in path)
         {
             Vector3 targetPos = new Vector3(point.x * cellSize, transform.position.y, (width - 1 - point.y) * cellSize);
-            Vector2 direction = new Vector2(transform.position.x - targetPos.x, transform.position.z - targetPos.z).normalized;
+
+            Vector3 direction = (transform.position - targetPos).normalized;
 
             Quaternion startRot = transform.rotation;
-            Quaternion targetRot = Quaternion.Euler(0, GetRotateAngle(direction), 0);
+            Quaternion targetRot = Quaternion.LookRotation(direction);
+            
             float angle = Quaternion.Angle(startRot, targetRot);
             float t = 0f;
 
@@ -54,14 +56,5 @@ public class RobotMovement : MonoBehaviour
         }
 
         Debug.Log("Move Finished.");
-    }
-
-    private float GetRotateAngle(Vector2 dir)
-    {
-        if (dir.x > 0) return 90f;
-        if (dir.x < 0) return 270f;
-        if (dir.y > 0) return 0f;
-        if (dir.y < 0) return 180f;
-        return 0f;
     }
 }
