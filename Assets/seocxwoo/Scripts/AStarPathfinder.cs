@@ -26,6 +26,12 @@ public static class AStarPathfinder
 
         while (true)
         {
+            if (openList.Count == 0)
+            {
+                Debug.LogWarning("No path found");
+                return new List<Vector2Int>();
+            }
+
             // 상하좌우 4방향에 대한 연산 진행
             AddNewPointToOpenList(openList, closeList, curPoint, grid, width, height, destination, -1, 0);
             AddNewPointToOpenList(openList, closeList, curPoint, grid, width, height, destination, 1, 0);

@@ -16,7 +16,7 @@ public class RobotMovement : MonoBehaviour
         this.cellSize = cellSize;
     }
 
-    public IEnumerator MoveRobotToNode(List<Vector2Int> path, Vector2Int destination)
+    public IEnumerator MoveRobotToNode(List<Vector2Int> path, Vector2Int destination, Quaternion lastRot)
     {
         foreach (Vector2Int point in path)
         {
@@ -39,11 +39,13 @@ public class RobotMovement : MonoBehaviour
 
             transform.rotation = targetRot;
 
-            if (destination.x * cellSize == targetPos.x && (width - 1 - destination.y) * cellSize == targetPos.z)
+            /*
+             * if (destination.x * cellSize == targetPos.x && (width - 1 - destination.y) * cellSize == targetPos.z)
             {
                 Debug.Log("Move Finished.");
                 yield break;
             }
+             */
 
             while (Vector3.Distance(transform.position, targetPos) > 0.01f)
             {
@@ -55,6 +57,26 @@ public class RobotMovement : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
+        Quaternion nowRot = transform.rotation;
+        //Quaternion targetRot = Quaternion.LookRotation(direction);
+
+        Vector3 rr = lastRot.eulerAngles;
+
+        Quaternion finalRot = Quaternion.Euler(0, (rr.y + 180f) % 360f, 0);
+
+        float bngle = Quaternion.Angle(nowRot, finalRot);
+        float tw = 0f;
+
+        while (tw < 1f)
+        {
+            tw += Time.deltaTime * (rotationSpeed / bngle);
+            transform.rotation = Quaternion.Slerp(nowRot, finalRot, tw);
+            yield return null;
+        }
+
+        transform.rotation = finalRot;
+
         Debug.Log("Move Finished.");
+        yield return new WaitForSeconds(1.0f);
     }
 }

@@ -7,7 +7,7 @@ public class InteractableRegistry : MonoBehaviour
     private class InteractableObject
     {
         public string name;
-        public Vector3 position;
+        public Transform transform;
     };
 
     [SerializeField] private List<GameObject> interactables = new List<GameObject>();
@@ -21,24 +21,23 @@ public class InteractableRegistry : MonoBehaviour
         {
             InteractableObject interactable = new InteractableObject();
             interactable.name = obj.name;
-            interactable.position = obj.transform.position;
+            interactable.transform = obj.transform;
             gameObjects.Add(interactable);
         }
     }
 
-    public Vector3 GetPosition(string name)
+    public Transform GetTransform(string name)
     {
         foreach(InteractableObject interactable in gameObjects)
         {
             Debug.Log(name + " " + interactable.name); 
             if (interactable.name == name)
             {
-                return interactable.position;
+                return interactable.transform;
             }
         }
 
         Debug.Log("Can't find " +  name);
-        return Vector3.zero;
-        // 수정 필요
+        return null;
     }
 }
