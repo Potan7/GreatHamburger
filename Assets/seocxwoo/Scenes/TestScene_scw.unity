@@ -2674,7 +2674,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d033c8e1f8cdbc448900bc73cb4be17e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactables:
+  gameObjects:
   - {fileID: 429554428}
   - {fileID: 751750578}
 --- !u!1 &336273975
@@ -3664,7 +3664,7 @@ GameObject:
   - component: {fileID: 429554433}
   m_Layer: 0
   m_Name: Red
-  m_TagString: Player
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6595,7 +6595,7 @@ GameObject:
   - component: {fileID: 751750583}
   m_Layer: 0
   m_Name: Blue
-  m_TagString: Player
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7321,7 +7321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ea299f57200d344184a1e4769c63012, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detector: {fileID: 942320640}
+  interactableDetector: {fileID: 942320640}
 --- !u!1 &885237320
 GameObject:
   m_ObjectHideFlags: 0

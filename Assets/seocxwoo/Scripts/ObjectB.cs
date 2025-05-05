@@ -4,8 +4,6 @@ public class ObjectB : MonoBehaviour, IInteractable
 {
     public void Interact(GameObject interactor)
     {
-        Debug.Log(interactor.name);
-
         Transform hand = interactor.transform.Find("Hand");
 
         if (hand == null)

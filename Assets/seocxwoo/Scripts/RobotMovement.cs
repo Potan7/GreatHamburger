@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RobotMovement : MonoBehaviour
 {
+    // ·Îº¿ÀÇ ¼Óµµ Á¤º¸
     [SerializeField] private float moveSpeed = 3.0f;
     [SerializeField] private float rotationSpeed = 180f;
 
@@ -39,14 +40,6 @@ public class RobotMovement : MonoBehaviour
 
             transform.rotation = targetRot;
 
-            /*
-             * if (destination.x * cellSize == targetPos.x && (width - 1 - destination.y) * cellSize == targetPos.z)
-            {
-                Debug.Log("Move Finished.");
-                yield break;
-            }
-             */
-
             while (Vector3.Distance(transform.position, targetPos) > 0.01f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
@@ -56,9 +49,8 @@ public class RobotMovement : MonoBehaviour
             transform.position = targetPos;
             yield return new WaitForSeconds(0.1f);
         }
-
+        ///////////
         Quaternion nowRot = transform.rotation;
-        //Quaternion targetRot = Quaternion.LookRotation(direction);
 
         Vector3 rr = lastRot.eulerAngles;
 
@@ -75,7 +67,7 @@ public class RobotMovement : MonoBehaviour
         }
 
         transform.rotation = finalRot;
-
+        ////////////// ¹­¾î¼­ ÇÔ¼ö·Î »©±â
         Debug.Log("Move Finished.");
         yield return new WaitForSeconds(1.0f);
     }

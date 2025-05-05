@@ -4,33 +4,36 @@ using UnityEngine;
 
 public class RobotController : MonoBehaviour
 {
+    // 이동 시작 위치, 목적지 위치
+    Vector2Int startPoint = new Vector2Int();
+    Vector2Int destPoint = new Vector2Int();
+
+    // 맵(그리드) 정보가 담긴 Json파일
+    public TextAsset stageJson;
+
+    // Json파일에서 추출한 그리드 정보
     private int width;
     private int height;
     private float cellSize;
     private int[,] grid;
 
-    // 로봇 시작 위치와 목적지 위치 지정
-    Vector2Int RobotPoint = new Vector2Int(4, 9);
-    Vector2Int DestPoint = new Vector2Int(9, 4);
+    // A* 알고리즘을 이용한 경로(리스트)
     private List<Vector2Int> pathList;
 
-    public TextAsset stageJson; // Resources 폴더에 넣고 할당
-
+    // Scripts
     private RobotMovement robotMovement;
     private RobotInteraction robotInteraction;
-
     [SerializeField] private InteractableRegistry interactableRegistry;
 
     void Start()
     {
-        // 그리드 맵 불러오기
+        // 맵(그리드) 정보 불러오기
         LoadStageGridData();
 
-        // 이동 컴포넌트 참조
+        // Initialization
         robotMovement = GetComponent<RobotMovement>();
-        robotInteraction = GetComponent<RobotInteraction>();
-
         robotMovement.Initialize(width, cellSize);
+        robotInteraction = GetComponent<RobotInteraction>();
 
         // 작동 시작
         StartCoroutine(RunRobotProgram());
@@ -48,50 +51,49 @@ public class RobotController : MonoBehaviour
 
     private IEnumerator RunRobotProgram()
     {
-        // 이동 함수
-        yield return StartCoroutine(Move("Red"));
+        yield return StartCoroutine(MoveToNode("Red"));
 
-        robotInteraction.RobotInteract();
+        robotInteraction.Interact();
 
-        // 이동 함수
-        yield return StartCoroutine(Move("Blue"));
+        yield return StartCoroutine(MoveToNode("Blue"));
 
-        robotInteraction.RobotInteract();
+        robotInteraction.Interact();
     }
 
-    private IEnumerator Move(string name)
+    private IEnumerator MoveToNode(string name)
     {
         // 목적지 정보 저장
         Transform destination = interactableRegistry.GetTransform(name);
 
         // 로봇 출발 위치(그리드) 지정
-        RobotPoint = ChangePosToPoint(transform.position);
+        startPoint = ChangePosToPoint(transform.position);
 
-        Vector2Int point = ChangePosToPoint(destination.position);
-        int rot = (int)(destination.rotation.eulerAngles.y);
-        Vector2Int newPoint = ChangeDestPoint(point, rot);
-        Debug.Log(rot);
-        DestPoint = newPoint;
         // 목적지 위치(그리드) 지정
-        //DestPoint = ChangePosToPoint(destination.position);
+        destPoint = ChangeDestPoint(destination);
 
         // 경로 탐색
-        pathList = AStarPathfinder.GetPathList(grid, width, height, RobotPoint, DestPoint);
-
+        pathList = AStarPathfinder.GetPathList(grid, width, height, startPoint, destPoint);
 
         // 이동 시작
-        yield return StartCoroutine(robotMovement.MoveRobotToNode(pathList, DestPoint, destination.rotation));
+        yield return StartCoroutine(robotMovement.MoveRobotToNode(pathList, destPoint, destination.rotation));
     }
 
     private Vector2Int ChangePosToPoint(Vector3 position)
     {
         // 오브젝트의 position 좌표를 그리드값으로 변경
-        Vector2Int vector2Int = new Vector2Int((int)(position.x / cellSize), (int)(((height - 1) * cellSize - position.z) / cellSize));
+        Vector2Int vector2Int = new Vector2Int(Mathf.RoundToInt(position.x / cellSize), Mathf.RoundToInt(((height - 1) * cellSize - position.z) / cellSize));
         return vector2Int;
     }
 
-    private Vector2Int ChangeDestPoint(Vector2Int point, int rot)
+    private Vector2Int ChangeDestPoint(Transform trans)
     {
+        // 목적지 위치(그리드) 지정
+        Vector2Int point = ChangePosToPoint(trans.position);
+
+        // 목적지 오브젝트(노드)가 바라보는 방향(각도) 저장
+        int rot = Mathf.RoundToInt(trans.rotation.eulerAngles.y);
+
+        // 바라보는 방향(앞칸)을 진짜 목적지 위치로 지정(다방향 접근 불가)
         int dx = point.x;
         int dy = point.y;
 

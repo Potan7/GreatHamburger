@@ -3,34 +3,33 @@ using UnityEngine;
 public class ObjectDetector : MonoBehaviour
 {
     private bool isInteractable = false;
-    private GameObject interactableObject;
+    private GameObject interactable;
 
     public bool IsInteractable()
     {
         return isInteractable;
     }
 
-    public GameObject GetInteractableObject()
+    public GameObject GetInteractable()
     {
-        return interactableObject;
+        return interactable;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Interactable"))
         {
-            Debug.Log("°¨Áö");
             isInteractable = true;
-            interactableObject = other.gameObject;
+            interactable = other.gameObject;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Interactable"))
         {
             isInteractable = false;
-            interactableObject = null;
+            interactable = null;
         }
     }
 }

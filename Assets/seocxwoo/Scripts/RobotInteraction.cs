@@ -2,19 +2,18 @@ using UnityEngine;
 
 public class RobotInteraction : MonoBehaviour
 {
-    [SerializeField] private GameObject detector;
+    [SerializeField] private GameObject interactableDetector;
 
-    public void RobotInteract()
+    public void Interact()
     {
-        ObjectDetector objDetector = detector.GetComponent<ObjectDetector>();
+        ObjectDetector detector = interactableDetector.GetComponent<ObjectDetector>();
 
-        if (objDetector.IsInteractable())
+        // detector가 감지한 오브젝트의 Interact() 실행
+        if (detector.IsInteractable())
         {
-            Debug.Log("상호작용 가능");
-
-            GameObject obj = objDetector.GetInteractableObject();
-            IInteractable s = obj.GetComponent<IInteractable>();
-            s.Interact(gameObject);
+            GameObject obj = detector.GetInteractable();
+            IInteractable interactable = obj.GetComponent<IInteractable>();
+            interactable.Interact(gameObject);
         }
     }
 

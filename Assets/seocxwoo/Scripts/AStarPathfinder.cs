@@ -26,9 +26,10 @@ public static class AStarPathfinder
 
         while (true)
         {
+            // 무한 루프 방지
             if (openList.Count == 0)
             {
-                Debug.LogWarning("No path found");
+                Debug.LogWarning("No Path Found.");
                 return new List<Vector2Int>();
             }
 
@@ -38,6 +39,7 @@ public static class AStarPathfinder
             AddNewPointToOpenList(openList, closeList, curPoint, grid, width, height, destination, 0, -1);
             AddNewPointToOpenList(openList, closeList, curPoint, grid, width, height, destination, 0, 1);
 
+            // 열린 위치 -> 닫힌 위치로 이동
             openList.Remove(curPoint);
             closeList.Add(curPoint);
 
@@ -54,6 +56,7 @@ public static class AStarPathfinder
                 }
             }
 
+            // 정한 위치로 이동
             curPoint = nextPoint;
 
             // 현재 위치가 목적지라면 STOP
@@ -72,7 +75,9 @@ public static class AStarPathfinder
             pathfindPoint = pathfindPoint.parentPoint;
         }
 
+        // 리스트 뒤집기(출발->목적지)
         pathList.Reverse();
+        // 리스트 첫칸(현재 위치) 삭제
         pathList.RemoveAt(0);
 
         return pathList;
@@ -94,7 +99,7 @@ public static class AStarPathfinder
         // 장애물(그리드의 1값)인 경우 return
         if (grid[newPoint.x, newPoint.y] != 0) return;
 
-        // 값 계산 후 열린 리스트에 저장
+        // 값 계산 후 열린 위치(리스트)에 저장
         newPoint.gn = curPoint.gn + 1;
         newPoint.hn = Math.Abs(newPoint.x - destination.x) + Math.Abs(newPoint.y - destination.y);
         newPoint.fn = newPoint.gn + newPoint.hn;
