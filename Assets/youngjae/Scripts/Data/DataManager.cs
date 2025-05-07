@@ -14,7 +14,6 @@ namespace Data
                 if (instance == null)
                 {
                     instance = Instantiate(Resources.Load<DataManager>("Singletone/DataManager")); // Resources 폴더에서 DataManager 프리팹을 로드하여 인스턴스 생성
-                    DontDestroyOnLoad(instance.gameObject); // 씬 전환 시 파괴되지 않도록 설정
                     instance.InitDataManager();
                 }
                 return instance;
@@ -23,10 +22,13 @@ namespace Data
 
         void InitDataManager()
         {
-            CurrentDataContainer = LoadDataContainer(); // 데이터 컨테이너 로드
+            Debug.Log("DataManager Initialized"); // 데이터 매니저 초기화 로그 출력
+            DontDestroyOnLoad(instance.gameObject); // 씬 전환 시 파괴되지 않도록 설정
+            LoadDataContainer(); // 데이터 컨테이너 로드
+            savefilePath = Path.Combine(Application.persistentDataPath, SAVEFILE_NAME); // 저장 파일 경로 설정
         }
 
-        void Awake()
+        void Start()
         {
             if (instance != this)
             {
@@ -37,15 +39,28 @@ namespace Data
 
         public const int STAGE_COUNT = 10; // 스테이지 개수
         public const string SAVEFILE_NAME = "data.json"; // 저장 파일 이름
-        public readonly string SAVEFILE_PATH = Path.Combine(Application.persistentDataPath, SAVEFILE_NAME); // 저장 파일 경로
+        public string savefilePath;
 
         #region DataContainer
-        public DataContainer CurrentDataContainer { get; private set; }
+
+        [SerializeField]
+        private DataContainer dataContainer;
+        public DataContainer CurrentDataContainer
+        {
+            get => dataContainer;
+            set => dataContainer = value;
+        }
 
         public float MasterVolume
         {
             get => CurrentDataContainer.MasterVolume;
             set => CurrentDataContainer.MasterVolume = value;
+        }
+
+        public bool IsMasterVolumeOn
+        {
+            get => CurrentDataContainer.IsMasterVolumeOn;
+            set => CurrentDataContainer.IsMasterVolumeOn = value;
         }
 
         public float SFXVolume
@@ -54,10 +69,22 @@ namespace Data
             set => CurrentDataContainer.SFXVolume = value;
         }
 
+        public bool IsSFXVolumeOn
+        {
+            get => CurrentDataContainer.IsSFXVolumeOn;
+            set => CurrentDataContainer.IsSFXVolumeOn = value;
+        }
+
         public float BGMVolume
         {
             get => CurrentDataContainer.BGMVolume;
             set => CurrentDataContainer.BGMVolume = value;
+        }
+
+        public bool IsBGMVolumeOn
+        {
+            get => CurrentDataContainer.IsBGMVolumeOn;
+            set => CurrentDataContainer.IsBGMVolumeOn = value;
         }
 
         public bool[] StageClear
@@ -69,36 +96,37 @@ namespace Data
 
         #region DataContainer Load/Save
 
-        DataContainer LoadDataContainer()
+        void LoadDataContainer()
         {
             // 파일이 존재할 경우 불러오고
-            if (File.Exists(SAVEFILE_PATH))
+            if (File.Exists(savefilePath))
             {
-                string json = File.ReadAllText(SAVEFILE_PATH);
-                return JsonUtility.FromJson<DataContainer>(json);
+                string json = File.ReadAllText(savefilePath);
+                CurrentDataContainer = JsonUtility.FromJson<DataContainer>(json);
             }
-
-            // 파일이 존재하지 않을 경우 기본값으로 초기화
-            return ResetDataContainer();
+            else
+            {
+                ResetDataContainer();
+            }
         }
 
-        DataContainer ResetDataContainer()
+        public void ResetDataContainer()
         {
-            var newDataContainer = new DataContainer
+            CurrentDataContainer = new DataContainer
             {
-                MasterVolume = 1.0f,
-                SFXVolume = 0.5f, // 사운드 볼륨
-                BGMVolume = 0.5f, // 배경 음악 볼륨
                 StageClear = new bool[STAGE_COUNT * 2] // 스테이지 클리어 여부
             };
-
-            return newDataContainer;
         }
 
         public void SaveDataContainer()
         {
             string json = JsonUtility.ToJson(CurrentDataContainer);
-            File.WriteAllText(SAVEFILE_PATH, json);
+            File.WriteAllText(savefilePath, json);
+        }
+
+        private void OnApplicationQuit()
+        {
+            SaveDataContainer();
         }
         #endregion
     }
