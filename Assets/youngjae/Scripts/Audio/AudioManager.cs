@@ -46,11 +46,19 @@ namespace Audio
 
         public AudioMixer audioMixer; // 오디오 믹서
 
+        /// <summary>
+        /// 오디오 믹서의 볼륨을 설정합니다.
+        /// </summary>
+        /// <param name="volume"></param>
+        /// <param name="soundType"></param>
         public void SetAudioVolume(float volume, SoundType soundType)
         {
             audioMixer.SetFloat(soundType.ToString(), Mathf.Log10(volume) * 20); // 오디오 믹서의 볼륨 설정
         }
 
+        /// <summary>
+        /// 모든 볼륨을 데이터 바탕으로 업데이트합니다.
+        /// </summary>
         public void UpdateAllVolume()
         {
             SetAudioVolume(DataManager.Instance.MasterVolume, SoundType.Master); // 마스터 볼륨 설정
@@ -58,6 +66,13 @@ namespace Audio
             SetAudioVolume(DataManager.Instance.BGMVolume, SoundType.BGM); // BGM 볼륨 설정
         }   
 
+        /// <summary>
+        /// 오디오 믹서의 음소거를 설정합니다.
+        /// 음소거 시 -80으로 설정됩니다.
+        /// 음소거 해제 시 데이터의 볼륨 값으로 설정됩니다.
+        /// </summary>
+        /// <param name="isMute"></param>
+        /// <param name="soundType"></param>
         public void SetAudioMute(bool isMute, SoundType soundType)
         {
             if (isMute)

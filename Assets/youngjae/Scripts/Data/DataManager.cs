@@ -96,6 +96,10 @@ namespace Data
 
         #region DataContainer Load/Save
 
+        /// <summary>
+        /// 데이터 컨테이너를 로드합니다.
+        /// 파일이 존재하지 않을 경우 초기화합니다.
+        /// </summary>
         void LoadDataContainer()
         {
             // 파일이 존재할 경우 불러오고
@@ -110,6 +114,9 @@ namespace Data
             }
         }
 
+        /// <summary>
+        /// 데이터 컨테이너를 초기화합니다.
+        /// </summary>
         public void ResetDataContainer()
         {
             CurrentDataContainer = new DataContainer
@@ -118,6 +125,9 @@ namespace Data
             };
         }
 
+        /// <summary>
+        /// 데이터 컨테이너를 저장합니다.
+        /// </summary>
         public void SaveDataContainer()
         {
             string json = JsonUtility.ToJson(CurrentDataContainer);
