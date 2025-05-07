@@ -4,12 +4,12 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using Data;
 
 namespace MainMenu
 {
     public class MainmenuManager : MonoBehaviour
     {
-        public int stageCount = 10; // 스테이지 개수
         public List<StageSelectButtonGroup> stageSelectButtonGroups = new List<StageSelectButtonGroup>(); // 스테이지 선택 버튼 그룹 리스트
 
         [Header("Stage Select UI")]
@@ -38,7 +38,7 @@ namespace MainMenu
             stageSelectTitleText.color = new Color(stageSelectTitleText.color.r, stageSelectTitleText.color.g, stageSelectTitleText.color.b, 0); // 초기 투명도 설정
             SetSequence();
 
-            for (int i = 0; i < stageCount; i++)
+            for (int i = 0; i < DataManager.STAGE_COUNT; i++)
             {
                 StageSelectButtonGroup stageSelectButtonGroup = Instantiate(stageSelectButtonPrefab, stageContectScrollRect.content);
                 stageSelectButtonGroup.SetStageText(i + 1); // 스테이지 텍스트 설정
