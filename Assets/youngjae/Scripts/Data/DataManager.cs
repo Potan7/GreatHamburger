@@ -24,8 +24,9 @@ namespace Data
         {
             Debug.Log("DataManager Initialized"); // 데이터 매니저 초기화 로그 출력
             DontDestroyOnLoad(instance.gameObject); // 씬 전환 시 파괴되지 않도록 설정
-            LoadDataContainer(); // 데이터 컨테이너 로드
+
             savefilePath = Path.Combine(Application.persistentDataPath, SAVEFILE_NAME); // 저장 파일 경로 설정
+            LoadDataContainer(); // 데이터 컨테이너 로드
         }
 
         void Start()

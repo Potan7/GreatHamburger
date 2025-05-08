@@ -14,7 +14,7 @@ namespace Audio
             {
                 if (instance == null)
                 {
-                    instance = Instantiate(Resources.Load<AudioManager>("Singletone/SoundManager")); // Resources 폴더에서 SoundManager 프리팹을 로드하여 인스턴스 생성
+                    instance = Instantiate(Resources.Load<AudioManager>("Singletone/AudioManager")); // Resources 폴더에서 SoundManager 프리팹을 로드하여 인스턴스 생성
                     instance.InitSoundManager();
                 }
                 return instance;
@@ -25,6 +25,11 @@ namespace Audio
         {
             Debug.Log("SoundManager Initialized"); // 사운드 매니저 초기화 로그 출력
             DontDestroyOnLoad(instance.gameObject); // 씬 전환 시 파괴되지 않도록 설정
+
+            // 모든 소리 토글 설정
+            SetAudioMute(!DataManager.Instance.IsMasterVolumeOn, SoundType.Master); // 마스터 음소거 설정
+            SetAudioMute(!DataManager.Instance.IsSFXVolumeOn, SoundType.SFX); // SFX 음소거 설정
+            SetAudioMute(!DataManager.Instance.IsBGMVolumeOn, SoundType.BGM); // BGM 음소거 설정
         }
 
         void Start()
@@ -53,6 +58,23 @@ namespace Audio
         /// <param name="soundType"></param>
         public void SetAudioVolume(float volume, SoundType soundType)
         {
+            if (volume < 0) volume = 0; // 볼륨이 0보다 작으면 0으로 설정
+            if (volume > 1) volume = 1; // 볼륨이 1보다 크면 1로 설정
+
+            // 음소거일 경우 return
+            switch (soundType)
+            {
+                case SoundType.Master:
+                    if (!DataManager.Instance.IsMasterVolumeOn) return; // 마스터 음소거 시 return
+                    break;
+                case SoundType.SFX:
+                    if (!DataManager.Instance.IsSFXVolumeOn) return; // SFX 음소거 시 return
+                    break;
+                case SoundType.BGM:
+                    if (!DataManager.Instance.IsBGMVolumeOn) return; // BGM 음소거 시 return
+                    break;
+            }
+
             audioMixer.SetFloat(soundType.ToString(), Mathf.Log10(volume) * 20); // 오디오 믹서의 볼륨 설정
         }
 
