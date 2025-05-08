@@ -51,12 +51,17 @@ public class RobotController : MonoBehaviour
 
     private IEnumerator RunRobotProgram()
     {
-        yield return StartCoroutine(MoveToNode("Red"));
+        // 로봇 실제 움직임이 입력될 함수
 
-        robotInteraction.Interact();
+        yield return StartCoroutine(MoveToNodeAndInteract("Red"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Blue"));
+    }
 
-        yield return StartCoroutine(MoveToNode("Blue"));
+    private IEnumerator MoveToNodeAndInteract(string name)
+    {
+        // 로봇이 이동 후 상호작용하도록 구성
 
+        yield return StartCoroutine(MoveToNode(name));
         robotInteraction.Interact();
     }
 

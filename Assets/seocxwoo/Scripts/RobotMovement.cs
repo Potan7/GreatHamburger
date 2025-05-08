@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class RobotMovement : MonoBehaviour
@@ -19,56 +20,54 @@ public class RobotMovement : MonoBehaviour
 
     public IEnumerator MoveRobotToNode(List<Vector2Int> path, Vector2Int destination, Quaternion lastRot)
     {
+        // 경로(리스트)를 받아 로봇의 실제 이동 구현 
         foreach (Vector2Int point in path)
         {
-            Vector3 targetPos = new Vector3(point.x * cellSize, transform.position.y, (width - 1 - point.y) * cellSize);
+            Vector3 destPos = new Vector3(point.x * cellSize, transform.position.y, (width - 1 - point.y) * cellSize);
+            Vector3 direction = (transform.position - destPos).normalized;
+            Quaternion endRot = Quaternion.LookRotation(direction);
 
-            Vector3 direction = (transform.position - targetPos).normalized;
-
-            Quaternion startRot = transform.rotation;
-            Quaternion targetRot = Quaternion.LookRotation(direction);
-            
-            float angle = Quaternion.Angle(startRot, targetRot);
-            float t = 0f;
-
-            while (t < 1f)
-            {
-                t += Time.deltaTime * (rotationSpeed / angle);
-                transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
-                yield return null;
-            }
-
-            transform.rotation = targetRot;
-
-            while (Vector3.Distance(transform.position, targetPos) > 0.01f)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
-                yield return null;
-            }
-
-            transform.position = targetPos;
-            yield return new WaitForSeconds(0.1f);
+            // 회전
+            yield return StartCoroutine(RotateTo(endRot));
+            // 이동
+            yield return StartCoroutine(MoveForward(destPos));
         }
-        ///////////
-        Quaternion nowRot = transform.rotation;
 
-        Vector3 rr = lastRot.eulerAngles;
+        // 마지막 회전(오브젝트를 바라보게)
+        Quaternion endRotation = Quaternion.Euler(0, (lastRot.eulerAngles.y + 180f) % 360f, 0);
+        yield return StartCoroutine(RotateTo(endRotation));
 
-        Quaternion finalRot = Quaternion.Euler(0, (rr.y + 180f) % 360f, 0);
+        Debug.Log("Move Finished.");
+        yield return new WaitForSeconds(1.0f);
+    }
 
-        float bngle = Quaternion.Angle(nowRot, finalRot);
-        float tw = 0f;
+    private IEnumerator RotateTo(Quaternion endRot)
+    {
+        Quaternion startRot = transform.rotation;
 
-        while (tw < 1f)
+        float angle = Quaternion.Angle(startRot, endRot);
+        float t = 0f;
+
+        while (t < 1f)
         {
-            tw += Time.deltaTime * (rotationSpeed / bngle);
-            transform.rotation = Quaternion.Slerp(nowRot, finalRot, tw);
+            t += Time.deltaTime * (rotationSpeed / angle);
+            transform.rotation = Quaternion.Slerp(startRot, endRot, t);
             yield return null;
         }
 
-        transform.rotation = finalRot;
-        ////////////// 묶어서 함수로 빼기
-        Debug.Log("Move Finished.");
-        yield return new WaitForSeconds(1.0f);
+        transform.rotation = endRot;
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    private IEnumerator MoveForward(Vector3 destPos)
+    {
+        while (Vector3.Distance(transform.position, destPos) > 0.01f)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, destPos, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        transform.position = destPos;
+        yield return new WaitForSeconds(0.1f);
     }
 }
