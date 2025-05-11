@@ -202,7 +202,7 @@ namespace MainMenu
             fadeImage.DOFade(1, fadeDuration).OnComplete(() =>
             {
                 // 스테이지 선택 후 처리할 로직을 여기에 추가합니다.
-                SceneManager.LoadScene(1);
+                SceneManager.LoadScene(stageNumber + 1);
             });
         }
     }
