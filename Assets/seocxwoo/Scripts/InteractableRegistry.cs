@@ -16,7 +16,7 @@ public class InteractableRegistry : MonoBehaviour
     // 앞선 리스트에서 정보(이름, Transform)를 저장하여 관리하는 리스트
     private List<InteractableObject> interactables = new List<InteractableObject>();
 
-    void Start()
+    void Awake()
     {
         foreach (GameObject obj in gameObjects)
         {

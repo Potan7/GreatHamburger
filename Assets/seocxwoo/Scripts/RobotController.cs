@@ -53,7 +53,9 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        for(int i = 0; i < 2; i++)
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
+
+        for (int i = 0; i < 2; i++)
         {
             yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
             yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
@@ -97,6 +99,8 @@ public class RobotController : MonoBehaviour
 
     private Vector2Int ChangeDestPoint(Transform trans)
     {
+        Debug.Log(trans);
+
         // 목적지 위치(그리드) 지정
         Vector2Int point = ChangePosToPoint(trans.position);
 
