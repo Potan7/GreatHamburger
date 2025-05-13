@@ -53,8 +53,11 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Red"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Blue"));
+        for(int i = 0; i < 2; i++)
+        {
+            yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
+            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        }
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)
@@ -72,9 +75,11 @@ public class RobotController : MonoBehaviour
 
         // 로봇 출발 위치(그리드) 지정
         startPoint = ChangePosToPoint(transform.position);
+        Debug.Log(startPoint);
 
         // 목적지 위치(그리드) 지정
         destPoint = ChangeDestPoint(destination);
+        Debug.Log(destPoint);
 
         // 경로 탐색
         pathList = AStarPathfinder.GetPathList(grid, width, height, startPoint, destPoint);
@@ -102,10 +107,10 @@ public class RobotController : MonoBehaviour
         int dx = point.x;
         int dy = point.y;
 
-        if (rot == 90) dx -= 1;
-        else if (rot == 270) dx += 1;
-        else if (rot == 0) dy += 1;
-        else if (rot == 180) dy -= 1;
+        if (rot == 90) dx += 1;
+        else if (rot == 270) dx -= 1;
+        else if (rot == 0) dy -= 1;
+        else if (rot == 180) dy += 1;
 
         return new Vector2Int(dx, dy);
     }

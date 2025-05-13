@@ -34,7 +34,8 @@ public class RobotMovement : MonoBehaviour
         }
 
         // 마지막 회전(오브젝트를 바라보게)
-        Quaternion endRotation = Quaternion.Euler(0, (lastRot.eulerAngles.y + 180f) % 360f, 0);
+        //Quaternion endRotation = Quaternion.Euler(0, (lastRot.eulerAngles.y + 180f) % 360f, 0);
+        Quaternion endRotation = Quaternion.Euler(0, lastRot.eulerAngles.y % 360f, 0);
         yield return StartCoroutine(RotateTo(endRotation));
 
         Debug.Log("Move Finished.");
