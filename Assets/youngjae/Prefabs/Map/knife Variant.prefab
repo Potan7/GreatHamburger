@@ -224,7 +224,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
-  m_Colliders: []
+  m_Colliders:
+  - {fileID: 904680025206173517}
+  - {fileID: 3320120897501463404}
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
