@@ -39,7 +39,7 @@ public class RobotMovement : MonoBehaviour
         yield return StartCoroutine(RotateTo(endRotation));
 
         Debug.Log("Move Finished.");
-        yield return new WaitForSeconds(1.0f);
+        //yield return new WaitForSeconds(1.0f);
     }
 
     private IEnumerator RotateTo(Quaternion endRot)

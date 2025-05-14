@@ -25,6 +25,8 @@ public class RobotController : MonoBehaviour
     private RobotInteraction robotInteraction;
     [SerializeField] private InteractableRegistry interactableRegistry;
 
+    private bool isBusy = false;
+
     void Start()
     {
         // 맵(그리드) 정보 불러오기
@@ -53,8 +55,6 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        //yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
-
         for (int i = 0; i < 2; i++)
         {
             yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
@@ -64,10 +64,16 @@ public class RobotController : MonoBehaviour
 
     private IEnumerator MoveToNodeAndInteract(string name)
     {
-        // 로봇이 이동 후 상호작용하도록 구성
+        // 로봇이 바쁘면 대기(애니메이션 등으로 인해)
+        while (isBusy)
+        {
+            yield return null;
+        }
 
+        // 로봇이 이동 후 상호작용하도록 구성
         yield return StartCoroutine(MoveToNode(name));
-        robotInteraction.Interact();
+        //robotInteraction.Interact();
+        robotInteraction.PlayAnim(name);
     }
 
     private IEnumerator MoveToNode(string name)
@@ -117,5 +123,10 @@ public class RobotController : MonoBehaviour
         else if (rot == 180) dy += 1;
 
         return new Vector2Int(dx, dy);
+    }
+
+    public void SetBusy(bool boolean)
+    {
+        isBusy = boolean;
     }
 }

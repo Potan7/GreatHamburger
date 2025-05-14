@@ -5,7 +5,6 @@ using UnityEngine;
 public class Crate : MonoBehaviour, IInteractable
 {
     [SerializeField] private List<GameObject> outputList = new List<GameObject>();
-    private Animator animator;
 
     public void Interact(GameObject interactor)
     {
@@ -23,11 +22,7 @@ public class Crate : MonoBehaviour, IInteractable
             Debug.Log("Already holding an item.");
             return;
         }
-
-        animator = interactor.GetComponent<Animator>();
-        animator.SetTrigger("PickUp");
-        //yield return new WaitForSeconds(1.0f);
-
+        
         GameObject item = Instantiate(outputList[0], hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;

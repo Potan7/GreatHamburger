@@ -3,6 +3,29 @@ using UnityEngine;
 public class RobotInteraction : MonoBehaviour
 {
     [SerializeField] private GameObject interactableDetector;
+    private RobotController controller;
+    private Animator animator;
+
+    void Start()
+    {
+        controller = GetComponent<RobotController>();
+        animator = GetComponent<Animator>();
+    }
+
+    public void PlayAnim(string interactable)
+    {
+        controller.SetBusy(true);
+
+        switch(interactable)
+        {
+            case "Crate":
+                animator.SetTrigger("PickUp");
+                break;
+            case "PlateTable":
+                animator.SetTrigger("PutDown");
+                break;
+        }
+    }
 
     public void Interact()
     {
@@ -15,6 +38,8 @@ public class RobotInteraction : MonoBehaviour
             IInteractable interactable = obj.GetComponent<IInteractable>();
             interactable.Interact(gameObject);
         }
+
+        controller.SetBusy(false);
     }
 
 }
