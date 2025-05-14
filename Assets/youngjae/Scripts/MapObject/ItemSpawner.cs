@@ -1,27 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSpawner : MonoBehaviour
+namespace MapObject
 {
-    public List<GameObject> itemList;
-
-    public int currentItemIndex = 0;
-
-    void Start()
+    public class ItemSpawner : MonoBehaviour
     {
-        SpawnItem();
-    }
+        public List<GameObject> itemList;
 
-    public void SpawnItem()
-    {
-        if (currentItemIndex >= itemList.Count)
+        public Transform mapObject;
+
+        public int currentItemIndex = 0;
+
+        void Start()
         {
-            return;
+            SpawnItem();
         }
 
-        Instantiate(itemList[currentItemIndex], transform.position, Quaternion.identity);
-        // item.transform.SetParent(transform);
+        public bool SpawnItem()
+        {
+            if (currentItemIndex >= itemList.Count)
+            {
+                return false;
+            }
 
-        currentItemIndex++;
+            Instantiate(itemList[currentItemIndex], transform.position + Vector3.up * 0.3f, Quaternion.identity, mapObject);
+            // item.transform.SetParent(transform);
+
+            currentItemIndex++;
+            return true;
+        }
     }
 }

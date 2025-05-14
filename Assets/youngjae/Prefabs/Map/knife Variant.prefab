@@ -151,10 +151,10 @@ PrefabInstance:
       addedObject: {fileID: 3501343189194273436}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 97e233407e668c14c8a5587552959e47, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 904680025206173517}
+      addedObject: {fileID: 3473129677868374862}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 97e233407e668c14c8a5587552959e47, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3473129677868374862}
+      addedObject: {fileID: 1581433288934125579}
   m_SourcePrefab: {fileID: 100100000, guid: 97e233407e668c14c8a5587552959e47, type: 3}
 --- !u!1 &6024904798455191352 stripped
 GameObject:
@@ -186,31 +186,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
---- !u!136 &904680025206173517
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6024904798455191352}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.13739309
-  m_Height: 0.40501818
-  m_Direction: 1
-  m_Center: {x: 0.047393084, y: -0.0339368, z: -0.0000009687969}
 --- !u!114 &3473129677868374862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -225,7 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
   m_Colliders:
-  - {fileID: 904680025206173517}
+  - {fileID: 1581433288934125579}
   - {fileID: 3320120897501463404}
   m_InteractionLayers:
     m_Bits: 1
@@ -310,7 +287,7 @@ MonoBehaviour:
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
-  m_ThrowOnDetach: 1
+  m_ThrowOnDetach: 0
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -335,6 +312,28 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
+--- !u!64 &1581433288934125579
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6024904798455191352}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7233159054065966114, guid: 96298cc6f84eaef4eb05e558105dcb5f, type: 3}
 --- !u!4 &6401605541810376066 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 97e233407e668c14c8a5587552959e47, type: 3}

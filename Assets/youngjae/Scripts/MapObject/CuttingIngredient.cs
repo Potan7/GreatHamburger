@@ -48,10 +48,18 @@ namespace MapObject
             interactable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)interactable);
             interactable.enabled = false;
 
-            transform.position = position;
+            transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, 0));
 
             rb.constraints = RigidbodyConstraints.FreezeAll;
 
+            cuttingBoard.currentIngredient = this;
+
+        }
+
+        public void ReEnable()
+        {
+            interactable.enabled = true;
+            rb.constraints = RigidbodyConstraints.None;
         }
 
         void OnCollisionEnter(Collision collision)
@@ -63,7 +71,10 @@ namespace MapObject
                 if (cuttedPrefab != null)
                 {
                     Instantiate(cuttedPrefab, transform.position, transform.rotation);
+                    cuttedPrefab = null;
                 }
+                cuttingBoard.currentIngredient = null;
+
                 gameObject.SetActive(false);
                 Destroy(gameObject); // Destroy the ingredient after cutting
 

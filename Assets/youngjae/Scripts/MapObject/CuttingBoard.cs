@@ -11,6 +11,7 @@ namespace MapObject
     {
         public XRGrabInteractable knifeInteractable;
         public TeleportationAnchor teleportationAnchor;
+        public Collider metalCollider;
 
         public bool isPositioned = false;
         public float positionedRange = 1f;
@@ -27,10 +28,11 @@ namespace MapObject
 
         void Start()
         {
-            player = FindFirstObjectByType<XROrigin>();
+            player = PlayerManager.Instance.player;
 
             knifeInitialPosition = knifeInteractable.transform.position;
             knifeInitialRotation = knifeInteractable.transform.rotation;
+            metalCollider.enabled = false;
         }
 
         async UniTask CheckPlayerPosition()
@@ -40,12 +42,20 @@ namespace MapObject
 
             debugObject.SetActive(true);
 
+            await UniTask.Delay(2000);
+
             // 플레이어가 보드에서 멀어지면 리셋
             await UniTask.WaitWhile(() => Vector3.Distance(player.transform.position, transform.position) < positionedRange);
 
             isPositioned = false;
             knifeInteractable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)knifeInteractable);
             knifeInteractable.transform.SetPositionAndRotation(knifeInitialPosition, knifeInitialRotation);
+            metalCollider.enabled = false;
+
+            if (currentIngredient != null)
+            {
+                currentIngredient.ReEnable();
+            }
 
             debugObject.SetActive(false);
             teleportationAnchor.enabled = true;
@@ -61,6 +71,16 @@ namespace MapObject
             {
                 currentIngredient.SetPosition(transform.position + Vector3.up * 0.1f);
             }
+            else
+            {
+                var ingredient = FindFirstObjectByType<CuttingIngredient>();
+                if (Vector3.Distance(ingredient.transform.position, transform.position) < positionedRange)
+                {
+                    ingredient.SetPosition(transform.position + Vector3.up * 0.1f);
+                }
+            }
+
+            metalCollider.enabled = true;
 
             CheckPlayerPosition().Forget();
         }
