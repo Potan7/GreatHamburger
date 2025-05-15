@@ -22,6 +22,11 @@ public class RobotInteraction : MonoBehaviour
                 animator.SetTrigger("PickUp");
                 break;
             case "PlateTable":
+                animator.SetBool("HasNextAction", false);
+                animator.SetTrigger("PutDown");
+                break;
+            case "CuttingBoard":
+                animator.SetBool("HasNextAction", true);
                 animator.SetTrigger("PutDown");
                 break;
         }
@@ -36,10 +41,10 @@ public class RobotInteraction : MonoBehaviour
         {
             GameObject obj = detector.GetInteractable();
             IInteractable interactable = obj.GetComponent<IInteractable>();
+            Debug.Log(obj.name);
             interactable.Interact(gameObject);
         }
 
         controller.SetBusy(false);
     }
-
 }

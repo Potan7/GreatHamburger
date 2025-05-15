@@ -2835,6 +2835,7 @@ MonoBehaviour:
   gameObjects:
   - {fileID: 919132148520886681}
   - {fileID: 630002289814115244}
+  - {fileID: 7657433293591959777}
 --- !u!1 &336273975
 GameObject:
   m_ObjectHideFlags: 0
@@ -20619,9 +20620,13 @@ PrefabInstance:
       propertyPath: interactableRegistry
       value: 
       objectReference: {fileID: 311872057}
+    - target: {fileID: 3414472825359951064, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
+      propertyPath: moveSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -20629,11 +20634,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalRotation.x
@@ -20641,11 +20646,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -20653,7 +20658,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 4856974805260682079, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -20792,7 +20797,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 55723467461372849, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
       propertyPath: m_Name
-      value: kitchencounter_straight_A_backsplash (2)
+      value: CuttingBoard
       objectReference: {fileID: 0}
     - target: {fileID: 352289566913320538, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -20837,8 +20842,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 55723467461372849, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 7657433293591959781}
   m_SourcePrefab: {fileID: 100100000, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
+--- !u!1 &7657433293591959777 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 55723467461372849, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
+  m_PrefabInstance: {fileID: 7657433293591959776}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &7657433293591959781
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7657433293591959777}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0000005, y: 1.2, z: 2.0419035}
+  m_Center: {x: 0, y: 0.6, z: 0.020951515}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

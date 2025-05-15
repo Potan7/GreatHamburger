@@ -55,6 +55,9 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
+        yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
+
         for (int i = 0; i < 2; i++)
         {
             yield return StartCoroutine(MoveToNodeAndInteract("Crate"));

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 352289566913320538}
   - component: {fileID: 3664427884497203703}
   - component: {fileID: 6966439580283013802}
+  - component: {fileID: 7490945220082591914}
   m_Layer: 0
-  m_Name: kitchencounter_straight_A_backsplash (2)
-  m_TagString: Untagged
+  m_Name: CuttingBoard
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -88,6 +89,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7490945220082591914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55723467461372849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5181c9d50b281c4a8a592e54d2b61be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7108031317649818424
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -160,7 +173,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: d6a46396bfa9f2d4ca0d69ee956e7b66, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d6a46396bfa9f2d4ca0d69ee956e7b66, type: 3}
       propertyPath: m_LocalPosition.y
@@ -168,7 +181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d6a46396bfa9f2d4ca0d69ee956e7b66, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d6a46396bfa9f2d4ca0d69ee956e7b66, type: 3}
       propertyPath: m_LocalRotation.w
