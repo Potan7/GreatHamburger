@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using MapObject.Ingredients;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
@@ -7,31 +9,21 @@ namespace MapObject
 
     public class Plate : MonoBehaviour
     {
-        public List<Transform> stackedIngredients = new List<Transform>();
+        public List<Ingredient> stackedIngredients = new();
         // private BoxCollider plateCollider;
-
-        public string[] answer;
-        public GameObject answerObject;
 
         [SerializeField]
         float plateHeight = 0f;  // 높이 조정
 
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Ingredient"))
-            {
-                StackIngredient(other.transform);
-            }
-        }
-
         void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.CompareTag("Ingredient"))
+            // Debug.Log($"Plate collided with {collision.gameObject.name}");
+            if (collision.gameObject.TryGetComponent<Ingredient>(out var ingredient))
             {
-                StackIngredient(collision.transform);
+                StackIngredient(ingredient);
             }
         }
-        void StackIngredient(Transform ingredient)
+        void StackIngredient(Ingredient ingredient)
         {
             // 이미 쌓인 재료인지 확인 (중복 스택 방지)
             if (stackedIngredients.Contains(ingredient))
@@ -40,28 +32,17 @@ namespace MapObject
             }
             Debug.Log("Stacking ingredient: " + ingredient.name);
 
-            if (ingredient.TryGetComponent<XRGrabInteractable>(out var interactable))
-            {
-                interactable.enabled = false;
-            }
+            ingredient.rb.constraints = RigidbodyConstraints.FreezeAll; // 모든 움직임을 고정
+            ingredient.interactable.enabled = false;
+            ingredient.collider.isTrigger = true; // 충돌을 트리거로 설정하여 물리적 상호작용 방지
 
-            // Rigidbody 비활성화하여 물리적 움직임 제어
-            if (ingredient.TryGetComponent<Rigidbody>(out var ingredientRb))
-            {
-                ingredientRb.isKinematic = true;
-                ingredientRb.useGravity = false;
-            }
+            ingredient.OnIngredientCollision += StackIngredient;
 
-            if (ingredient.TryGetComponent<Collider>(out var ingredientCollider))
-            {
-                ingredientCollider.isTrigger = true;
-            }
-
-            ingredient.SetParent(transform, true); // worldPositionStays = true로 설정하여 현재 월드 상태 유지 후 부모 지정
+            ingredient.transform.SetParent(transform, true); // worldPositionStays = true로 설정하여 현재 월드 상태 유지 후 부모 지정
 
             // 재료의 위치 조정
             Quaternion rotation = Quaternion.Euler(0, 0, 0); // 필요에 따라 로컬 회전값 조정 가능
-            ingredient.localRotation = rotation;
+            ingredient.transform.localRotation = rotation;
             if (ingredient.TryGetComponent<Renderer>(out var ingredientRenderer))
             {
                 // 1. 재료의 월드 공간에서의 실제 높이를 가져옵니다.
@@ -90,37 +71,38 @@ namespace MapObject
                 plateHeight += heightToAddInLocalSpace;
                 Debug.Log($"  7. plateHeight (after this ingredient): {this.plateHeight}");
 
-                ingredient.localPosition = newLocalPosition;
+                ingredient.transform.localPosition = newLocalPosition;
                 // ingredient.SetLocalPositionAndRotation(newLocalPosition, targetLocalRotation); // 이렇게 사용해도 동일
             }
 
             stackedIngredients.Add(ingredient);
+            PlayerMapManager.Instance.OnAddedItemToPlate(stackedIngredients);
+            
+            // bool trySpawnItem = FindFirstObjectByType<ItemSpawner>().SpawnItem();
+            // if (!trySpawnItem)
+            // {
+            //     bool isCorrect = true;
+            //     for (int i = 0; i < answer.Length; i++)
+            //     {
+            //         if (!stackedIngredients[i].name.Contains(answer[i]))
+            //         {
+            //             isCorrect = false;
+            //             Debug.Log($"Incorrect ingredient: {stackedIngredients[i].name} does not contain {answer[i]}");
+            //             break;
+            //         }
+            //     }
 
-            bool trySpawnItem = FindFirstObjectByType<ItemSpawner>().SpawnItem();
-            if (!trySpawnItem)
-            {
-                bool isCorrect = true;
-                for (int i = 0; i < answer.Length; i++)
-                {
-                    if (!stackedIngredients[i].name.Contains(answer[i]))
-                    {
-                        isCorrect = false;
-                        Debug.Log($"Incorrect ingredient: {stackedIngredients[i].name} does not contain {answer[i]}");
-                        break;
-                    }
-                }
+            //     if (isCorrect)
+            //     {
+            //         answerObject.SetActive(true);
+            //         Debug.Log("Correct! All ingredients stacked.");
+            //     }
+            //     else
+            //     {
+            //         Debug.Log("Incorrect! Try again.");
+            //     }
 
-                if (isCorrect)
-                {
-                    answerObject.SetActive(true);
-                    Debug.Log("Correct! All ingredients stacked.");
-                }
-                else
-                {
-                    Debug.Log("Incorrect! Try again.");
-                }
-                
-            }
+            // }
         }
     }
 }

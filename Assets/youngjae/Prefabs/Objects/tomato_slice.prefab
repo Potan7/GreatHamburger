@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_LocalPosition.x
@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       propertyPath: m_IsActive
@@ -89,6 +89,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
       insertIndex: -1
       addedObject: {fileID: -9017045851913881632}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2296502673384562415}
   m_SourcePrefab: {fileID: 100100000, guid: c02536131aca5274ca54c06c20a77c37, type: 3}
 --- !u!1 &3423474475672786989 stripped
 GameObject:
@@ -137,7 +140,7 @@ MonoBehaviour:
   m_InteractionManager: {fileID: 0}
   m_Colliders: []
   m_InteractionLayers:
-    m_Bits: 64
+    m_Bits: 1
   m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_FocusMode: 1
@@ -266,3 +269,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5897541620420230933, guid: 336e6cefe4ff3f041b4f4a4e8ac34ed8, type: 3}
+--- !u!114 &2296502673384562415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423474475672786989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54497d24f4b48a944913453bcd6fb1c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: {fileID: 0}
+  rb: {fileID: 0}
+  collider: {fileID: 0}

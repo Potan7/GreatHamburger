@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
       propertyPath: m_IsActive
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Ingredient
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -89,6 +89,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2180236529234276820}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3290399368502204232}
   m_SourcePrefab: {fileID: 100100000, guid: 00743f20054140e499005763b9e2e2fe, type: 3}
 --- !u!1 &2827090774474955830 stripped
 GameObject:
@@ -219,7 +222,7 @@ MonoBehaviour:
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
-  m_ThrowOnDetach: 0
+  m_ThrowOnDetach: 1
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -266,3 +269,19 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1675931065404318426, guid: 20d8f012becc55a45bf05de763c95748, type: 3}
+--- !u!114 &3290399368502204232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2827090774474955830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27dbbcab22e5f894ebc90d40064fd6b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactable: {fileID: 0}
+  rb: {fileID: 0}
+  collider: {fileID: 0}
+  cookedPrefab: {fileID: 2790476017379906221, guid: caf57caf023f962499bc0a0eb4dc66a7, type: 3}

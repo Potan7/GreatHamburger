@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -11,20 +12,18 @@ namespace MapObject
     {
         public XRGrabInteractable knifeInteractable;
         public TeleportationAnchor teleportationAnchor;
-        public Collider metalCollider;
 
         public bool isPositioned = false;
         public float positionedRange = 1f;
+        public Knife knife;
 
         Vector3 knifeInitialPosition;
         Quaternion knifeInitialRotation;
 
-        public XROrigin player;
+        XROrigin player;
 
         public GameObject debugObject;
-
-        public CuttingIngredient currentIngredient;
-
+        Ingredient boardIngredient;
 
         void Start()
         {
@@ -32,7 +31,8 @@ namespace MapObject
 
             knifeInitialPosition = knifeInteractable.transform.position;
             knifeInitialRotation = knifeInteractable.transform.rotation;
-            metalCollider.enabled = false;
+
+            knife.canCutting = false;
         }
 
         async UniTask CheckPlayerPosition()
@@ -50,13 +50,13 @@ namespace MapObject
             isPositioned = false;
             knifeInteractable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)knifeInteractable);
             knifeInteractable.transform.SetPositionAndRotation(knifeInitialPosition, knifeInitialRotation);
-            metalCollider.enabled = false;
 
-            if (currentIngredient != null)
+            if (boardIngredient != null)
             {
-                currentIngredient.ReEnable();
+                boardIngredient.ReEnable();
             }
 
+            knife.canCutting = false;
             debugObject.SetActive(false);
             teleportationAnchor.enabled = true;
         }
@@ -67,20 +67,24 @@ namespace MapObject
             isPositioned = true;
             teleportationAnchor.enabled = false;
 
-            if (currentIngredient != null)
+            if (PlayerManager.Instance.selectIngredient != null)
             {
-                currentIngredient.SetPosition(transform.position + Vector3.up * 0.1f);
+                boardIngredient = PlayerManager.Instance.selectIngredient;
+                boardIngredient.SetPosition(transform.position + Vector3.up * 0.1f);
             }
             else
             {
-                var ingredient = FindFirstObjectByType<CuttingIngredient>();
+                var ingredient = FindFirstObjectByType<Ingredient>();
+                if (ingredient == null)
+                    return;
                 if (Vector3.Distance(ingredient.transform.position, transform.position) < positionedRange)
                 {
                     ingredient.SetPosition(transform.position + Vector3.up * 0.1f);
+                    boardIngredient = ingredient;
                 }
             }
 
-            metalCollider.enabled = true;
+            knife.canCutting = true;
 
             CheckPlayerPosition().Forget();
         }

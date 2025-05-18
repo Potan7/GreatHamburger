@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e26b87c1e0d880042ae0b98e2956c8dc, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Ingredient
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -88,10 +88,10 @@ PrefabInstance:
       addedObject: {fileID: 7198064218343586417}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e26b87c1e0d880042ae0b98e2956c8dc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6416407702705783831}
+      addedObject: {fileID: 4242266136827683128}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e26b87c1e0d880042ae0b98e2956c8dc, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4242266136827683128}
+      addedObject: {fileID: -2522601721226245205}
   m_SourcePrefab: {fileID: 100100000, guid: e26b87c1e0d880042ae0b98e2956c8dc, type: 3}
 --- !u!1 &2466485191187231443 stripped
 GameObject:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_SmoothScale: 0
   m_SmoothScaleAmount: 8
   m_TightenScale: 0.1
-  m_ThrowOnDetach: 0
+  m_ThrowOnDetach: 1
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -247,8 +247,21 @@ MonoBehaviour:
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
   m_FarAttachMode: 0
---- !u!135 &6416407702705783831
-SphereCollider:
+--- !u!114 &4242266136827683128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2466485191187231443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0857de459eedd4642aab99523975dcae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cuttedPrefab: {fileID: 2296502673384562415, guid: ff8e63dab6730d147867f11cab249a62, type: 3}
+--- !u!64 &-2522601721226245205
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -265,19 +278,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.36923838
-  m_Center: {x: 0.004781246, y: 0.31713927, z: 0.000000029802322}
---- !u!114 &4242266136827683128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2466485191187231443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0857de459eedd4642aab99523975dcae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cuttedPrefab: {fileID: 3423474475672786989, guid: ff8e63dab6730d147867f11cab249a62, type: 3}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5321038836818693795, guid: ad8904e6de5742745a6fedc42fbfa649, type: 3}

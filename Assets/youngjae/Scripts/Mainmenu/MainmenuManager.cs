@@ -194,15 +194,19 @@ namespace MainMenu
                 stageSelectButtonGroups[i].SetFirstStageInteractive(stageData[i * 2 - 1]); // 첫 번째 스테이지 버튼 상호작용 설정
                 stageSelectButtonGroups[i].SetSecondStageInteractive(stageData[i * 2]); // 두 번째 스테이지 버튼 상호작용 설정
             }
-        }  
+        }
 
         void OnStageButtonClicked(int stageNumber)
         {
-            fadeImage.gameObject.SetActive(true); // 페이드 이미지 활성화
-            fadeImage.DOFade(1, fadeDuration).OnComplete(() =>
+            // fadeImage.gameObject.SetActive(true); // 페이드 이미지 활성화
+            // fadeImage.DOFade(1, fadeDuration).OnComplete(() =>
+            // {
+            //     // 스테이지 선택 후 처리할 로직을 여기에 추가합니다.
+            //     SceneManager.LoadScene(stageNumber + 1);
+            // });
+            PlayerManager.Instance.FadeIn(() =>
             {
-                // 스테이지 선택 후 처리할 로직을 여기에 추가합니다.
-                SceneManager.LoadScene(stageNumber + 1);
+                SceneManager.LoadScene(stageNumber + 1); // 스테이지 선택 후 씬 로드
             });
         }
     }

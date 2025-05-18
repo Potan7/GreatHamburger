@@ -1,4 +1,6 @@
+using System;
 using DG.Tweening;
+using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,7 +9,13 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
 
+    public Ingredient selectIngredient = null;
+
     public Image fadeImage;
+    public GameObject canvas;
+
+    public bool isFadeIn = false;
+    public XROrigin player;
 
     void Awake()
     {
@@ -16,11 +24,13 @@ public class PlayerManager : MonoBehaviour
             Instance = this;
             // player = GetComponent<XROrigin>();
 
-            if (fadeImage.gameObject.activeSelf == true)
+            if (isFadeIn || canvas.activeSelf == true)
             {
-                fadeImage.DOFade(0, 1f).OnComplete(() =>
+                canvas.SetActive(true);
+                fadeImage.color = Color.black;
+                fadeImage.DOFade(0, 2f).OnComplete(() =>
                 {
-                    fadeImage.gameObject.SetActive(false);
+                    canvas.SetActive(false);
                 });
             }
         }
@@ -30,7 +40,15 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public XROrigin player;
-
+    public void FadeIn(Action onComplete = null)
+    {
+        canvas.SetActive(true);
+        fadeImage.color = Color.clear;
+        fadeImage.DOFade(1, 1.5f).OnComplete(() =>
+        {
+            canvas.SetActive(false);
+            onComplete?.Invoke();
+        });
+    }
 
 }
