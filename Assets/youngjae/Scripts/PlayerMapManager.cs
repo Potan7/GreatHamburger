@@ -96,17 +96,4 @@ public class PlayerMapManager : MonoBehaviour
         await tcs.Task;
         scene.allowSceneActivation = true;
     }
-
-    public async void GoMainMenu()
-    {
-        var tcs = new UniTaskCompletionSource();
-        var scene = SceneManager.LoadSceneAsync(0);
-        scene.allowSceneActivation = false;
-        PlayerManager.Instance.FadeIn(() =>
-        {
-            tcs.TrySetResult();
-        });
-        await tcs.Task;
-        scene.allowSceneActivation = true;
-    }
 }

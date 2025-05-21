@@ -48,7 +48,7 @@ namespace MapObject
             if (currentAngle < 15)
             {
                 ovenHingeJoint.useSpring = true;
-                Debug.Log("Oven door closed");
+                // Debug.Log("Oven door closed");
                 isOvenDoorOpen = false;
                 OnDoorClosed?.Invoke();
             }

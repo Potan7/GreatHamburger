@@ -74,6 +74,8 @@ public class OvenInside : MonoBehaviour
         Debug.Log("Oven cooking done");
         ingredient = ingredient.DoCooking();
 
+        ingredient.ReEnable();
+
         oven.OpenDoor();
     }
 }

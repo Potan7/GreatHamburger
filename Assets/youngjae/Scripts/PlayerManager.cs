@@ -3,7 +3,10 @@ using DG.Tweening;
 using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -16,6 +19,8 @@ public class PlayerManager : MonoBehaviour
 
     public bool isFadeIn = false;
     public XROrigin player;
+
+    InputAction inputAction;
 
     void Awake()
     {
@@ -33,10 +38,21 @@ public class PlayerManager : MonoBehaviour
                     canvas.SetActive(false);
                 });
             }
+
+            inputAction = GetComponent<InputActionManager>().actionAssets[0].FindAction("XRI Custom/Menu");
+            inputAction.performed += OnMenuInput;
         }
         else
         {
             Destroy(gameObject); // 이미 존재하는 경우 중복 객체 파괴
+        }
+    }
+
+    private void OnMenuInput(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            MenuManager.Instance.SetMenuToggle();
         }
     }
 
@@ -51,4 +67,8 @@ public class PlayerManager : MonoBehaviour
         });
     }
 
+    void OnDestroy()
+    {
+        inputAction.performed -= OnMenuInput;
+    }
 }
