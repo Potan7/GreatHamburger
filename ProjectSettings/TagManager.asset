@@ -6,14 +6,16 @@ TagManager:
   tags:
   - Anchor
   - Interactable
+  - Knife
+  - Ingredient
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Tool
   - Water
   - UI
-  - 
+  - Ingredient
   - 
   - 
   - 
