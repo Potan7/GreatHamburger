@@ -2,16 +2,6 @@ using UnityEngine;
 using UnityEngine.XR;
 using TMPro;
 
-public enum CodeBlockType 
-{
-    Go,
-    Interaction,
-    For,
-    If,
-    While,
-    ingredient,
-    Position
-}
 public class CodeBlockSpawnButton : MonoBehaviour
 {
     public GameObject blockPrefab;

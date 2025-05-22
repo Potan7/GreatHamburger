@@ -9,11 +9,11 @@ public class CodeBlockSlot : MonoBehaviour
     private bool isFull = false;
     GameObject currentSlotBlock = null;
 
-    public string GetCodeContent() 
+    public CodeBlock GetCodeContent() 
     {
         if (currentSlotBlock == null) return null;
 
-        return currentSlotBlock.GetComponent<CodeBlock>().codeBlockType.ToString();
+        return currentSlotBlock.GetComponent<CodeBlock>();
     }
     void OnTriggerEnter(Collider other)
     {
