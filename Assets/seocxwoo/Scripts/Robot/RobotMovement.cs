@@ -57,7 +57,7 @@ public class RobotMovement : MonoBehaviour
         }
 
         transform.rotation = endRot;
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
     }
 
     private IEnumerator MoveForward(Vector3 destPos)
@@ -69,6 +69,6 @@ public class RobotMovement : MonoBehaviour
         }
 
         transform.position = destPos;
-        yield return new WaitForSeconds(0.1f);
+        //yield return new WaitForSeconds(0.1f);
     }
 }

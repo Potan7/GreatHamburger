@@ -15,6 +15,7 @@ public class RobotInteraction : MonoBehaviour
     public void PlayAnim(string interactable)
     {
         controller.SetBusy(true);
+        animator.SetBool("NeedTime", true);
 
         switch(interactable)
         {
@@ -41,10 +42,20 @@ public class RobotInteraction : MonoBehaviour
         {
             GameObject obj = detector.GetInteractable();
             IInteractable interactable = obj.GetComponent<IInteractable>();
-            Debug.Log(obj.name);
             interactable.Interact(gameObject);
         }
+    }
 
-        controller.SetBusy(false);
+    public void Cut()
+    {
+        ObjectDetector detector = interactableDetector.GetComponent<ObjectDetector>();
+
+        // detector가 감지한 오브젝트의 Interact() 실행
+        if (detector.IsInteractable())
+        {
+            GameObject obj = detector.GetInteractable();
+            CuttingBoard interactable = obj.GetComponent<CuttingBoard>();
+            interactable.CutIngredient(gameObject);
+        }
     }
 }

@@ -6,8 +6,9 @@ public class PlateTable : MonoBehaviour, IInteractable
 
     public void Interact(GameObject interactor)
     {
-        Debug.Log("is working");
+        Debug.Log("Robot°ú PlateTable Interact ½Ãµµ");
 
+        RobotController controller = interactor.GetComponent<RobotController>();
         Transform hand = interactor.transform.Find("Hand");
 
         if (hand == null)
@@ -18,7 +19,7 @@ public class PlateTable : MonoBehaviour, IInteractable
 
         if (hand.childCount == 0)
         {
-            Debug.Log("No item.");
+            Debug.LogWarning("Robot has no item.");
             return;
         }
 
@@ -28,6 +29,8 @@ public class PlateTable : MonoBehaviour, IInteractable
         item.transform.localPosition = new Vector3(0, offset, 0);
         offset += item.GetComponent<Ingredient>().GetHeight();
         item.transform.localRotation = Quaternion.identity;
+
+        controller.SetBusy(false);
     }
 
     void OnDrawGizmos()
