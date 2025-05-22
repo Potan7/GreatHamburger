@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
 
-    public Ingredient selectIngredient = null;
+    public PlayerIngredient selectIngredient = null;
 
     public Image fadeImage;
     public GameObject canvas;

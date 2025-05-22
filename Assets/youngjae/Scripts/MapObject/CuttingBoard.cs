@@ -23,7 +23,7 @@ namespace MapObject
         XROrigin player;
 
         public GameObject debugObject;
-        Ingredient boardIngredient;
+        PlayerIngredient boardIngredient;
 
         void Start()
         {
@@ -74,7 +74,7 @@ namespace MapObject
             }
             else
             {
-                var ingredient = FindFirstObjectByType<Ingredient>();
+                var ingredient = FindFirstObjectByType<PlayerIngredient>();
                 if (ingredient == null)
                     return;
                 if (Vector3.Distance(ingredient.transform.position, transform.position) < positionedRange)

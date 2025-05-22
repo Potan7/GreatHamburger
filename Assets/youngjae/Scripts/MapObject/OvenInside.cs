@@ -14,7 +14,7 @@ public class OvenInside : MonoBehaviour
     public float cookingTime = 3f; // Time in seconds to cook the ingredient
 
     bool isCooking = false;
-    Ingredient ingredient;
+    PlayerIngredient ingredient;
 
     void Start()
     {
@@ -26,7 +26,7 @@ public class OvenInside : MonoBehaviour
         if (isCooking || !oven.isOvenDoorOpen)
             return;
 
-        if (other.TryGetComponent(out Ingredient insideIngredient))
+        if (other.TryGetComponent(out PlayerIngredient insideIngredient))
         {
             ingredient = insideIngredient;
         }

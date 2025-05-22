@@ -6,13 +6,13 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 namespace MapObject.Ingredients
 {
     [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
-    public class Ingredient : MonoBehaviour
+    public class PlayerIngredient : MonoBehaviour
     {
         public XRGrabInteractable interactable;
         public Rigidbody rb;
         public new Collider collider;
 
-        public event Action<Ingredient> OnIngredientCollision = null;
+        public event Action<PlayerIngredient> OnIngredientCollision = null;
 
         private void Awake()
         {
@@ -53,28 +53,28 @@ namespace MapObject.Ingredients
             rb.constraints = RigidbodyConstraints.None;
         }
 
-        public virtual Ingredient DoCutting()
+        public virtual PlayerIngredient DoCutting()
         {
             return this;
         }
 
-        public virtual Ingredient DoCooking()
+        public virtual PlayerIngredient DoCooking()
         {
             return this;
         }
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent(out Ingredient ingredient))
+            if (other.gameObject.TryGetComponent(out PlayerIngredient ingredient))
             {
                 // Debug.Log($"Ingredient collided with {ingredient.name}");
                 OnIngredientCollision?.Invoke(ingredient);
             }
         }
 
-        protected Ingredient ChangeNewIngredient(Ingredient newIngredient)
+        protected PlayerIngredient ChangeNewIngredient(PlayerIngredient newIngredient)
         {
-            Ingredient cutted = this;
+            PlayerIngredient cutted = this;
             if (newIngredient != null)
             {
                 cutted = Instantiate(newIngredient, transform.position, transform.rotation, transform.parent);

@@ -31,7 +31,7 @@ public class PlayerMapManager : MonoBehaviour
         }
     }
 
-    public void CheckAnswer(List<Ingredient> addedItemList)
+    public void CheckAnswer(List<PlayerIngredient> addedItemList)
     {
         if (answerList.Count != addedItemList.Count)
         {
@@ -60,7 +60,7 @@ public class PlayerMapManager : MonoBehaviour
         exitDoor.OpenDoor();
     }
 
-    public void OnAddedItemToPlate(List<Ingredient> addedItemList)
+    public void OnAddedItemToPlate(List<PlayerIngredient> addedItemList)
     {
         bool isItemSpawned = itemSpawner.SpawnItem();
 

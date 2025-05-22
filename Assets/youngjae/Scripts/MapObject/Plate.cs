@@ -9,7 +9,7 @@ namespace MapObject
 
     public class Plate : MonoBehaviour
     {
-        public List<Ingredient> stackedIngredients = new();
+        public List<PlayerIngredient> stackedIngredients = new();
         // private BoxCollider plateCollider;
 
         [SerializeField]
@@ -18,12 +18,12 @@ namespace MapObject
         void OnCollisionEnter(Collision collision)
         {
             // Debug.Log($"Plate collided with {collision.gameObject.name}");
-            if (collision.gameObject.TryGetComponent<Ingredient>(out var ingredient))
+            if (collision.gameObject.TryGetComponent<PlayerIngredient>(out var ingredient))
             {
                 StackIngredient(ingredient);
             }
         }
-        void StackIngredient(Ingredient ingredient)
+        void StackIngredient(PlayerIngredient ingredient)
         {
             // 이미 쌓인 재료인지 확인 (중복 스택 방지)
             if (stackedIngredients.Contains(ingredient))
@@ -34,7 +34,7 @@ namespace MapObject
 
             ingredient.rb.constraints = RigidbodyConstraints.FreezeAll; // 모든 움직임을 고정
             ingredient.interactable.enabled = false;
-            ingredient.collider.isTrigger = true; // 충돌을 트리거로 설정하여 물리적 상호작용 방지
+            ingredient.GetComponent<Collider>().isTrigger = true; // 충돌을 트리거로 설정하여 물리적 상호작용 방지
 
             ingredient.OnIngredientCollision += StackIngredient;
 

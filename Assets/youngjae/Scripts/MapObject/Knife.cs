@@ -22,7 +22,7 @@ namespace MapObject
                 return;
 
             // Debug.Log($"Knife collided with {collision.gameObject.name}");
-            if (collision.gameObject.TryGetComponent(out Ingredient ingredient))
+            if (collision.gameObject.TryGetComponent(out PlayerIngredient ingredient))
             {
                 ingredient.DoCutting();
                 WaitCoolTime().Forget();
