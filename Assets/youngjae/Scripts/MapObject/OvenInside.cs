@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using MapObject;
@@ -13,8 +14,8 @@ public class OvenInside : MonoBehaviour
 
     public float cookingTime = 3f; // Time in seconds to cook the ingredient
 
-    bool isCooking = false;
-    PlayerIngredient ingredient;
+    // bool isCooking = false;
+    readonly HashSet<PlayerIngredient> ingredients = new HashSet<PlayerIngredient>();
 
     void Start()
     {
@@ -23,31 +24,28 @@ public class OvenInside : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (isCooking || !oven.isOvenDoorOpen)
-            return;
-
         if (other.TryGetComponent(out PlayerIngredient insideIngredient))
         {
-            ingredient = insideIngredient;
+            ingredients.Add(insideIngredient);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (ingredient != null && ingredient.gameObject == other.gameObject)
+        if (other.TryGetComponent(out PlayerIngredient insideIngredient))
         {
-            ingredient = null;
+            ingredients.Remove(insideIngredient);
         }
 
-        if (isCooking)
-        {
-            isCooking = false;
-        }
+        // if (isCooking)
+        // {
+        //     isCooking = false;
+        // }
     }
 
     public void OnOvenClosed()
     {
-        if (ingredient == null)
+        if (ingredients.Count == 0)
             return;
 
         PutIngredientToOven().Forget();
@@ -55,8 +53,11 @@ public class OvenInside : MonoBehaviour
 
     async UniTask PutIngredientToOven()
     {
-        ingredient.SetPosition(ingredientPoint.position);
-        isCooking = true;
+        // isCooking = true;
+        foreach (var ingredient in ingredients)
+        {
+            ingredient.SetInteractable(false);
+        }
 
         oven.ForceCloseOvenDoor();
         await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
@@ -72,9 +73,16 @@ public class OvenInside : MonoBehaviour
 
         progressBar.gameObject.SetActive(false);
         Debug.Log("Oven cooking done");
-        ingredient = ingredient.DoCooking();
 
-        ingredient.ReEnable();
+        var ingredientsCopy = new List<PlayerIngredient>(ingredients);
+
+        foreach (var ingredient in ingredientsCopy)
+        {
+            ingredients.Remove(ingredient);
+            var cookedIngredient = ingredient.DoCooking();
+            ingredients.Add(cookedIngredient);
+            cookedIngredient.SetInteractable(true);
+        }
 
         oven.OpenDoor();
     }
