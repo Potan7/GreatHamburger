@@ -19,7 +19,13 @@ public class RobotInteraction : MonoBehaviour
 
         switch(interactable)
         {
-            case "Crate":
+            case "Crate_Buns":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Lettuce":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Tomatoes":
                 animator.SetTrigger("PickUp");
                 break;
             case "PlateTable":

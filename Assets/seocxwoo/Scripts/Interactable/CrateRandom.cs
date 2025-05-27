@@ -2,9 +2,11 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crate : MonoBehaviour, IInteractable
+public class CrateRandom : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject ingredientPrefab;
+    [SerializeField] private List<GameObject> ingredientPrefabList = new List<GameObject>();
+    private int count = 0;
+    private int prevIndex = -1;
 
     public void Interact(GameObject interactor)
     {
@@ -27,7 +29,23 @@ public class Crate : MonoBehaviour, IInteractable
             return;
         }
         
-        GameObject item = Instantiate(ingredientPrefab, hand);
+        int index = Random.Range(0, ingredientPrefabList.Count);
+        if (count == 4 && index == prevIndex)
+        {
+            index = (index + 1) % 2;
+            count = 0;
+        }
+        else if (index == prevIndex)
+        {
+            count++;
+        }
+        else
+        {
+            count = 0;
+        }
+        prevIndex = index;
+
+        GameObject item = Instantiate(ingredientPrefabList[index], hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
 
