@@ -126,6 +126,7 @@ MonoBehaviour:
   cuttedIngredientList:
   - {fileID: 4467201214014632934, guid: 384dcbae610f9494dbb587e69652c9e4, type: 3}
   - {fileID: 764353736546291866, guid: dc327ee2ecaabac4181fe79af032ff75, type: 3}
+  - {fileID: 2354832468737919606, guid: 98c056cfd87c74942ba07ed886b7e548, type: 3}
   storage: {fileID: 0}
 --- !u!1001 &7108031317649818424
 PrefabInstance:

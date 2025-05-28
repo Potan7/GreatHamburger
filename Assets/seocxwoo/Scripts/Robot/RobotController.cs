@@ -55,6 +55,8 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
+        yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
+
         yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
@@ -63,6 +65,14 @@ public class RobotController : MonoBehaviour
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
         yield return StartCoroutine(MoveToNodeAndInteract("Crate_Tomatoes"));
+        yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Cheese"));
         yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 

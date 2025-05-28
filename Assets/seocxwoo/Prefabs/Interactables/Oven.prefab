@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7161412135238150250}
   - component: {fileID: 4801834772567678700}
   - component: {fileID: -7876750727067062462}
+  - component: {fileID: 5351039556591692518}
   m_Layer: 0
   m_Name: Oven
   m_TagString: Interactable
@@ -195,3 +196,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.0000005, y: 2.0199826, z: 2.3478708}
   m_Center: {x: 0, y: 1.0099913, z: 0.14393482}
+--- !u!114 &5351039556591692518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298922607680853588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f591cc53a19f87a478ec6e13b20cde5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cookedBurger: {fileID: 40002245809050480, guid: a36c6860c1f7a4a42bb973ee34edffea, type: 3}
