@@ -17,11 +17,32 @@ class CodeLineExecutor
 
     const float basicCooltime = 3.0f;
 
+    private int nodeIndex;
+    private int forRepeatCount;
+
+    private int compareValue1, compareValue2;
+    private CodeBlockType compareType;
+
     public CodeLineExecutor(GameObject ui, BlockCodeExecutor ce) 
     {
         lineTextUI = ui;
         blockType = ui.GetComponent<CodeTextUI>().blockType;
         codeExecutor = ce;
+
+        if (blockType == CodeBlockType.Interact)
+        {
+            nodeIndex = ui.GetComponent<CodeBlock>().currentSlot.transform.GetChild(0).GetComponent<CodeBlockSlot>().currentSlotBlock.GetComponent<CodeBlock>().selectNumber;
+        }
+        else if (blockType == CodeBlockType.For)
+        {
+            forRepeatCount = ui.GetComponent<CodeBlock>().currentSlot.transform.GetChild(0).GetComponent<CodeBlockSlot>().currentSlotBlock.GetComponent<CodeBlock>().selectNumber;
+        }
+        else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
+        {
+            compareValue1 = ui.GetComponent<CodeBlock>().currentSlot.transform.GetChild(0).GetComponent<CodeBlockSlot>().currentSlotBlock.GetComponent<CodeBlock>().selectNumber;
+            compareType = ui.GetComponent<CodeBlock>().currentSlot.transform.GetChild(1).GetComponent<CodeBlockSlot>().currentType;
+            compareValue2 = ui.GetComponent<CodeBlock>().currentSlot.transform.GetChild(2).GetComponent<CodeBlockSlot>().currentSlotBlock.GetComponent<CodeBlock>().selectNumber;
+        }
     }
     public void SetNextCodeIndex(int nidx, int cnidx = -1)
     {
@@ -32,10 +53,10 @@ class CodeLineExecutor
     public void ExecuteLine()
     {
         isCooltimeEnd = false;
-        if (blockType == CodeBlockType.Move || blockType == CodeBlockType.Interact)
+        if (blockType == CodeBlockType.Interact)
         {
             //isWorkEnd = false;
-            isWorkEnd = true; //test
+            isWorkEnd = true; //test - 로봇이 완료하는 거 기다려야 함
         }
         else
         {
@@ -51,22 +72,40 @@ class CodeLineExecutor
         {
             lineTextUI.GetComponent<CodeTextUI>().EmphasizeText(false);
             int idx = nextIndex;
-            if (!isConditionFullfill()) 
+            if (!isConditionFullfill())
             {
                 idx = conditionalNextIndex;
+            }
+            else 
+            {
+                forRepeatCount--;
             }
             codeExecutor.StartNextCode(idx);
         }
     }
     private bool isConditionFullfill()
     {
-        if (blockType == CodeBlockType.For ||
-            blockType == CodeBlockType.If ||
-            blockType == CodeBlockType.While)
+        //조건 체크 필요
+        if (blockType == CodeBlockType.For)
         {
+            return (forRepeatCount > 0);
+        }
+        else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
+        {
+            //compareValue 중 손에 든 것은 어떻게 처리? 고민 좀 해봐야 함
 
-            //조건 체크 필요
-            return true;
+            if (compareType == CodeBlockType.Same) 
+            {
+                return compareValue1 == compareValue2;
+            }
+            else if (compareType == CodeBlockType.Greater)
+            {
+                return compareValue1 > compareValue2;
+            }
+            else if (compareType == CodeBlockType.Less)
+            {
+                return compareValue1 < compareValue2;
+            }
         }
 
         return true;
@@ -103,6 +142,7 @@ public class BlockCodeExecutor : MonoBehaviour
     private void SetNextLineIndex() 
     {
         Stack<Tuple<int, CodeBlockType>> stack = new();
+        List<int> breaks = new();
         for (int i = 0; i < lineExes.Count; i++)
         {
             CodeBlockType type = lineExes[i].blockType;
@@ -116,13 +156,19 @@ public class BlockCodeExecutor : MonoBehaviour
                     type == CodeBlockType.EndIf ||
                     type == CodeBlockType.EndWhile)
             {
+                for (int j = 0; j < breaks.Count; j++) 
+                {
+                    lineExes[breaks[j]].SetNextCodeIndex(i + 1);
+                }
+                breaks.Clear();
+
                 if (stack.Count == 0)
                 {
                     Debug.LogError("블록코딩 신텍스 오류 - 닫는 블록에 대응할 열기 블록이 없습니다. Line: " + i);
                     return;
                 }
                 var t = stack.Pop();
-                if ((type - t.Item2) != 1) 
+                if ((type - t.Item2) != 1)
                 {
                     Debug.LogError("블록코딩 신텍스 오류 - 블록 쌍의 순서가 올바르지 않습니다. Line: " + i);
                     return;
@@ -138,6 +184,16 @@ public class BlockCodeExecutor : MonoBehaviour
                 {
                     lineExes[i].SetNextCodeIndex(t.Item1);
                 }
+            }
+            else if (type == CodeBlockType.Break)
+            {
+                breaks.Add(i);
+            }
+            else if (type == CodeBlockType.Continue)
+            {
+                var t = stack.Pop();
+                lineExes[i].SetNextCodeIndex(t.Item1);
+                stack.Push(t);
             }
             else
             {
@@ -178,15 +234,11 @@ public class BlockCodeExecutor : MonoBehaviour
         }
         currentExecutedLine = lineExes[nextIdx];
         currentExecutedLine.ExecuteLine();
-        StartWork(currentExecutedLine.blockType);
+        StartWork(currentExecutedLine);
     }
-    private void StartWork(CodeBlockType type)
+    private void StartWork(CodeLineExecutor line)
     {
-        if (type == CodeBlockType.Move)
-        {
-            //cookingrobot 호출
-        }
-        else if (type == CodeBlockType.Interact)
+        if (line.blockType == CodeBlockType.Interact)
         {
             //cookingrobot 호출
         }
@@ -204,10 +256,6 @@ public class BlockCodeExecutor : MonoBehaviour
     {
         //조건 체크용 기능 필요
         //robot에서 현재 든 재료 참조 필요
-    }
-    public void OccurMoveError()
-    {
-        //이동 기능 도중 버그 발생 시 호출 필요
     }
     public void OccurInteractionError() 
     {
