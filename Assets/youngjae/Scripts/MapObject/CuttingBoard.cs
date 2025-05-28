@@ -26,7 +26,7 @@ namespace MapObject
         public GameObject debugObject;
         PlayerIngredient boardIngredient;
 
-        Collider[] overlapColliders = new Collider[5];
+        public Collider[] overlapColliders = new Collider[5];
 
         CancellationTokenSource cancellationTokenSource;
 
@@ -80,6 +80,7 @@ namespace MapObject
             }
 
             isPositioned = false;
+            knife.rb.isKinematic = true;
             knifeInteractable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)knifeInteractable);
             knifeInteractable.transform.SetPositionAndRotation(knifeInitialPosition, knifeInitialRotation);
 
@@ -102,20 +103,16 @@ namespace MapObject
             }
             cancellationTokenSource = new CancellationTokenSource();
 
-            // grabbed.transform.SetPositionAndRotation(transform.position + Vector3.up, Quaternion.Euler(0, 0, 0));
-            isPositioned = true;
-            teleportationAnchor.enabled = false;
-
             if (PlayerManager.Instance.GetSelectedIngredientCount() > 0)
             {
                 boardIngredient = PlayerManager.Instance.GetFirstSelectedIngredientWithItemDeselect(deselectOther: true);
             }
             else
             {
-                int count = Physics.OverlapSphereNonAlloc(transform.position, positionedRange, overlapColliders);
+                int count = Physics.OverlapSphereNonAlloc(transform.position, positionedRange, overlapColliders, LayerMask.GetMask("Ingredient"));
                 if (count > 0)
                 {
-                    for (int i = 0; i < overlapColliders.Length; i++)
+                    for (int i = 0; i < count; i++)
                     {
                         if (overlapColliders[i] == null)
                             continue;
@@ -127,8 +124,17 @@ namespace MapObject
                         }
                     }
                 }
-
             }
+            if (boardIngredient == null)
+            {
+                Debug.LogWarning("No ingredient found near the cutting board.");
+                return;
+            }
+
+            // grabbed.transform.SetPositionAndRotation(transform.position + Vector3.up, Quaternion.Euler(0, 0, 0));
+            isPositioned = true;
+            teleportationAnchor.enabled = false;
+            knife.rb.isKinematic = false;
 
             boardIngredient.SetPosition(transform.position + Vector3.up * 0.1f, true);
             boardIngredient.OnIngredientSelected += OnIngredientSelected;

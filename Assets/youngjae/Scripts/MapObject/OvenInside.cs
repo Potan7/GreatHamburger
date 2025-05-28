@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Data;
 using MapObject;
 using MapObject.Ingredients;
 using UnityEngine;
@@ -83,6 +84,8 @@ public class OvenInside : MonoBehaviour
             ingredients.Add(cookedIngredient);
             cookedIngredient.SetInteractable(true);
         }
+
+        FindAnyObjectByType<DescriptionPanel>().JobComplete(WaitJob.WaitForCooking);
 
         oven.OpenDoor();
     }

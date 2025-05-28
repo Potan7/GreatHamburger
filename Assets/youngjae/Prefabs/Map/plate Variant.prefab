@@ -65,6 +65,10 @@ PrefabInstance:
       value: plate Variant
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: d6f8a5959db05344ca050bcc85e069c7, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6f8a5959db05344ca050bcc85e069c7, type: 3}
       propertyPath: m_TagString
       value: Untagged
       objectReference: {fileID: 0}
@@ -117,4 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74d279d1417cfb441a55ee689059994b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stackedIngredients: []
   plateHeight: 0

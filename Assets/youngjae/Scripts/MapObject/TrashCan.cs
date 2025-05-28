@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class TrashCan : MonoBehaviour
@@ -7,7 +8,10 @@ public class TrashCan : MonoBehaviour
         if (other.CompareTag("Ingredient"))
         {
             
-            Destroy(other.gameObject);
+            other.transform.DOScale(Vector3.zero, 0.5f).OnComplete(() =>
+            {
+                Destroy(other.gameObject);
+            });
         }
     }
 }

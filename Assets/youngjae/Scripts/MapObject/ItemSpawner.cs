@@ -20,16 +20,16 @@ namespace MapObject
             SpawnItem().Forget();
         }
 
-        void IngredientSelected(PlayerIngredient ingredient)
+        protected void IngredientSelected(PlayerIngredient ingredient)
         {
             // Debug.Log("Selected: " + ingredient.name);
             ingredient.OnIngredientSelected -= IngredientSelected;
             SpawnItem().Forget();
         }
 
-        public async UniTaskVoid SpawnItem()
+        public virtual async UniTaskVoid SpawnItem()
         {
-            await UniTask.Delay(spawnInterval * 1000); // Delay in milliseconds
+            await UniTask.Delay(spawnInterval * 1000);
 
             var ingredient = Instantiate(itemList[currentItemIndex], transform.position + Vector3.up * 0.3f, Quaternion.identity, mapObject);
             ingredient.OnIngredientSelected += IngredientSelected;

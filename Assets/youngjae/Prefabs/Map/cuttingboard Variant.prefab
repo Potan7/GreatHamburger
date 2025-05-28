@@ -842,9 +842,15 @@ MonoBehaviour:
   knifeInteractable: {fileID: 287185305704215616}
   teleportationAnchor: {fileID: 1994575962510418188}
   isPositioned: 0
-  positionedRange: 2
+  positionedRange: 1
   knife: {fileID: 1632203222598092546}
   debugObject: {fileID: 7679457373273620484}
+  overlapColliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &5488253698138683664 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d6a46396bfa9f2d4ca0d69ee956e7b66, type: 3}

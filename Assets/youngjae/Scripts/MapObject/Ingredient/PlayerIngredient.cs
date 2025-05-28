@@ -8,9 +8,9 @@ namespace MapObject.Ingredients
     [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
     public class PlayerIngredient : MonoBehaviour
     {
-        public XRGrabInteractable interactable;
-        public Rigidbody rb;
-        public new Collider collider;
+        public XRGrabInteractable interactable { get;  private set; }
+        public Rigidbody rb { get; private set; }
+        public new Collider collider { get; private set; }
 
         public event Action<PlayerIngredient> OnIngredientCollision = null;
         public event Action<PlayerIngredient> OnIngredientSelected = null;
