@@ -19,15 +19,34 @@ public class RobotInteraction : MonoBehaviour
 
         switch(interactable)
         {
-            case "Crate":
+            case "Crate_Buns":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Lettuce":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Tomatoes":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Cheese":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Burgers":
+                animator.SetTrigger("PickUp");
+                break;
+            case "Crate_Random":
                 animator.SetTrigger("PickUp");
                 break;
             case "PlateTable":
-                animator.SetBool("HasNextAction", false);
+                animator.SetInteger("NextAction", 0);
                 animator.SetTrigger("PutDown");
                 break;
             case "CuttingBoard":
-                animator.SetBool("HasNextAction", true);
+                animator.SetInteger("NextAction", 1);
+                animator.SetTrigger("PutDown");
+                break;
+            case "Oven":
+                animator.SetInteger("NextAction", 2);
                 animator.SetTrigger("PutDown");
                 break;
         }
@@ -56,6 +75,19 @@ public class RobotInteraction : MonoBehaviour
             GameObject obj = detector.GetInteractable();
             CuttingBoard interactable = obj.GetComponent<CuttingBoard>();
             interactable.CutIngredient(gameObject);
+        }
+    }
+
+    public void Wait()
+    {
+        ObjectDetector detector = interactableDetector.GetComponent<ObjectDetector>();
+
+        // detector가 감지한 오브젝트의 Interact() 실행
+        if (detector.IsInteractable())
+        {
+            GameObject obj = detector.GetInteractable();
+            Oven interactable = obj.GetComponent<Oven>();
+            interactable.WaitForBurger(gameObject);
         }
     }
 }
