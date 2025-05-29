@@ -2,9 +2,10 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crate : MonoBehaviour, IInteractable
+public class CrateBuns : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject ingredientPrefab;
+    [SerializeField] private List<GameObject> ingredientPrefabList = new List<GameObject>();
+    private int count = 0;
 
     public void Interact(GameObject interactor)
     {
@@ -27,7 +28,7 @@ public class Crate : MonoBehaviour, IInteractable
             return;
         }
         
-        GameObject item = Instantiate(ingredientPrefab, hand);
+        GameObject item = Instantiate(ingredientPrefabList[count++ % 2], hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
 
