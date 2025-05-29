@@ -12,10 +12,7 @@ public class PlayerMapManager : MonoBehaviour
 
     public List<GameObject> answerList = new();
 
-    public ItemSpawner itemSpawner;
-
     public GameObject answerCheckMark;
-    public GameObject answerFailMark;
 
     public ExitDoor exitDoor;
 
@@ -35,23 +32,16 @@ public class PlayerMapManager : MonoBehaviour
     {
         if (answerList.Count != addedItemList.Count)
         {
-            PlateFail();
             return;
         }
         for (int i = 0; i < answerList.Count; i++)
         {
             if (!addedItemList[i].name.Contains(answerList[i].name))
             {
-                PlateFail();
                 return;
             }
         }
         PlateSuccess();
-    }
-
-    void PlateFail()
-    {
-        answerFailMark.SetActive(true);
     }
 
     void PlateSuccess()
@@ -62,12 +52,7 @@ public class PlayerMapManager : MonoBehaviour
 
     public void OnAddedItemToPlate(List<PlayerIngredient> addedItemList)
     {
-        bool isItemSpawned = itemSpawner.SpawnItem();
-
-        if (!isItemSpawned)
-        {
-            CheckAnswer(addedItemList);
-        }
+        CheckAnswer(addedItemList);
     }
 
     public async void RestartGame()

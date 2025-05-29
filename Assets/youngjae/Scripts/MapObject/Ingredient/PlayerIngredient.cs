@@ -8,11 +8,14 @@ namespace MapObject.Ingredients
     [RequireComponent(typeof(Rigidbody), typeof(XRGrabInteractable))]
     public class PlayerIngredient : MonoBehaviour
     {
-        public XRGrabInteractable interactable;
-        public Rigidbody rb;
-        public new Collider collider;
+        public XRGrabInteractable interactable { get;  private set; }
+        public Rigidbody rb { get; private set; }
+        public new Collider collider { get; private set; }
 
         public event Action<PlayerIngredient> OnIngredientCollision = null;
+        public event Action<PlayerIngredient> OnIngredientSelected = null;
+        public event Action<PlayerIngredient> OnIngredientDeselected = null;
+
 
         private void Awake()
         {
@@ -22,35 +25,57 @@ namespace MapObject.Ingredients
 
             interactable.selectEntered.AddListener(OnSelected);
             interactable.selectExited.AddListener(OnDeselected);
+
+            OnIngredientSelected += PlayerManager.Instance.ItemSelected;
+            OnIngredientDeselected += PlayerManager.Instance.ItemDeselected;
         }
 
         private void OnDeselected(SelectExitEventArgs arg0)
         {
             // Debug.Log("Deselected");
-            PlayerManager.Instance.selectIngredient = null;
+            // PlayerManager.Instance.ItemDeselected(this);
+            OnIngredientDeselected?.Invoke(this);
         }
 
         private void OnSelected(SelectEnterEventArgs arg0)
         {
             // Debug.Log("Selected");
-            PlayerManager.Instance.selectIngredient = this;
+            // PlayerManager.Instance.ItemSelected(this);
+            OnIngredientSelected?.Invoke(this);
+
+            if (rb.constraints != RigidbodyConstraints.None)
+            {
+                rb.constraints = RigidbodyConstraints.None;
+            }
         }
 
-        public void SetPosition(Vector3 position)
+        public void SetPosition(Vector3 position, bool isFreeze = false)
         {
-            interactable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)interactable);
-            interactable.enabled = false;
+            CancelSelection();
 
             transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, 0));
 
-            rb.constraints = RigidbodyConstraints.FreezeAll;
-            PlayerManager.Instance.selectIngredient = null;
+            if (isFreeze)
+            {
+                SetFreeze(true);
+            }
         }
 
-        public void ReEnable()
+        public void SetInteractable(bool isInteractable)
         {
-            interactable.enabled = true;
-            rb.constraints = RigidbodyConstraints.None;
+            interactable.enabled = isInteractable;
+        }
+
+        public void SetFreeze(bool isFreeze)
+        {
+            if (isFreeze)
+            {
+                rb.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                rb.constraints = RigidbodyConstraints.None;
+            }
         }
 
         public virtual PlayerIngredient DoCutting()
@@ -79,12 +104,17 @@ namespace MapObject.Ingredients
             {
                 cutted = Instantiate(newIngredient, transform.position, transform.rotation, transform.parent);
             }
-            PlayerManager.Instance.selectIngredient = null;
+            PlayerManager.Instance.ItemDeselected(this);
 
             gameObject.SetActive(false);
             Destroy(gameObject); // Destroy the ingredient after cutting
 
             return cutted;
+        }
+
+        public void CancelSelection()
+        {
+            interactable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)interactable);
         }
     }
 

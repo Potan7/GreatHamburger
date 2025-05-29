@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
@@ -25,6 +26,10 @@ namespace MapObject
         public GameObject debugObject;
         PlayerIngredient boardIngredient;
 
+        public Collider[] overlapColliders = new Collider[5];
+
+        CancellationTokenSource cancellationTokenSource;
+
         void Start()
         {
             player = PlayerManager.Instance.player;
@@ -35,25 +40,53 @@ namespace MapObject
             knife.canCutting = false;
         }
 
-        async UniTask CheckPlayerPosition()
+        async UniTask CheckPlayerPosition(CancellationToken cancellationToken)
         {
-            // 플레이어가 텔레포트되는데 시간이 걸려서 붙는 거 대기
-            await UniTask.WaitWhile(() => Vector3.Distance(player.transform.position, transform.position) > positionedRange);
+            try
+            {
+                // 플레이어가 텔레포트되는데 시간이 걸려서 붙는 거 대기
+                await UniTask.WaitWhile(() => Vector3.Distance(player.transform.position, transform.position) > positionedRange, cancellationToken: cancellationToken);
 
-            debugObject.SetActive(true);
+                if (cancellationToken.IsCancellationRequested) return;
 
-            await UniTask.Delay(2000);
+                debugObject.SetActive(true);
 
-            // 플레이어가 보드에서 멀어지면 리셋
-            await UniTask.WaitWhile(() => Vector3.Distance(player.transform.position, transform.position) < positionedRange);
+                await UniTask.Delay(2000, cancellationToken: cancellationToken);
+
+                if (cancellationToken.IsCancellationRequested) return;
+
+                // 플레이어가 보드에서 멀어지면 리셋
+                await UniTask.WaitWhile(() => Vector3.Distance(player.transform.position, transform.position) < positionedRange, cancellationToken: cancellationToken);
+
+                if (cancellationToken.IsCancellationRequested) return;
+
+                EndCutting(); // 정상적으로 플레이어가 멀어진 경우
+            }
+            catch (System.OperationCanceledException)
+            {
+                Debug.Log("CheckPlayerPosition was canceled.");
+                // EndCutting()은 외부에서 호출될 때 이미 실행되므로 여기서 중복 호출할 필요는 없음.
+                // 필요한 경우 추가적인 취소 관련 정리 작업 수행
+            }
+        }
+
+        private void EndCutting()
+        {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
+            }
 
             isPositioned = false;
+            knife.rb.isKinematic = true;
             knifeInteractable.interactionManager.CancelInteractableSelection((IXRSelectInteractable)knifeInteractable);
             knifeInteractable.transform.SetPositionAndRotation(knifeInitialPosition, knifeInitialRotation);
 
             if (boardIngredient != null)
             {
-                boardIngredient.ReEnable();
+                boardIngredient.SetInteractable(true);
             }
 
             knife.canCutting = false;
@@ -63,30 +96,52 @@ namespace MapObject
 
         public void OnTeleportAnchorTeleported()
         {
-            // grabbed.transform.SetPositionAndRotation(transform.position + Vector3.up, Quaternion.Euler(0, 0, 0));
-            isPositioned = true;
-            teleportationAnchor.enabled = false;
-
-            if (PlayerManager.Instance.selectIngredient != null)
+            if (cancellationTokenSource != null)
             {
-                boardIngredient = PlayerManager.Instance.selectIngredient;
-                boardIngredient.SetPosition(transform.position + Vector3.up * 0.1f);
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+            }
+            cancellationTokenSource = new CancellationTokenSource();
+
+            if (PlayerManager.Instance.GetSelectedIngredientCount() > 0)
+            {
+                boardIngredient = PlayerManager.Instance.GetFirstSelectedIngredientWithItemDeselect(deselectOther: true);
             }
             else
             {
-                var ingredient = FindFirstObjectByType<PlayerIngredient>();
-                if (ingredient == null)
-                    return;
-                if (Vector3.Distance(ingredient.transform.position, transform.position) < positionedRange)
+                int count = Physics.OverlapSphereNonAlloc(transform.position, positionedRange, overlapColliders, LayerMask.GetMask("Ingredient"));
+                if (count > 0)
                 {
-                    ingredient.SetPosition(transform.position + Vector3.up * 0.1f);
-                    boardIngredient = ingredient;
+                    for (int i = 0; i < count; i++)
+                    {
+                        if (overlapColliders[i] == null)
+                            continue;
+
+                        if (overlapColliders[i].gameObject.TryGetComponent(out PlayerIngredient ingredient))
+                        {
+                            boardIngredient = ingredient;
+                            break;
+                        }
+                    }
                 }
             }
+            if (boardIngredient == null)
+            {
+                Debug.LogWarning("No ingredient found near the cutting board.");
+                return;
+            }
+
+            // grabbed.transform.SetPositionAndRotation(transform.position + Vector3.up, Quaternion.Euler(0, 0, 0));
+            isPositioned = true;
+            teleportationAnchor.enabled = false;
+            knife.rb.isKinematic = false;
+
+            boardIngredient.SetPosition(transform.position + Vector3.up * 0.1f, true);
+            boardIngredient.OnIngredientSelected += OnIngredientSelected;
 
             knife.canCutting = true;
 
-            CheckPlayerPosition().Forget();
+            CheckPlayerPosition(cancellationTokenSource.Token).Forget();
         }
 
         public void GrabKnife()
@@ -94,6 +149,22 @@ namespace MapObject
             if (!isPositioned)
             {
                 teleportationAnchor.RequestTeleport();
+            }
+        }
+
+        void OnIngredientSelected(PlayerIngredient ingredient)
+        {
+            ingredient.OnIngredientSelected -= OnIngredientSelected;
+            EndCutting();
+        }
+
+        void OnDestroy()
+        {
+            if (cancellationTokenSource != null)
+            {
+                cancellationTokenSource.Cancel();
+                cancellationTokenSource.Dispose();
+                cancellationTokenSource = null;
             }
         }
     }
