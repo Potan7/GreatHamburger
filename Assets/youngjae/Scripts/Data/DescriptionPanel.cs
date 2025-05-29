@@ -8,6 +8,21 @@ using UnityEngine.UI;
 
 namespace Data
 {
+    /// <summary>
+    /// 파일 로드 경로는 StreamingAssets/StageDescription/{파일이름}.json
+    /// textName을 비워두면 자동으로 현재 씬 이름을 통해 로드합니다.
+    /// textName을 설정하면 해당 이름의 파일을 로드합니다.
+    /// 
+    /// 파일 내용은 다음과 같은 형식입니다:
+    /// title: "설명창 제목"
+    /// descriptions: [내용 배열]
+    /// 
+    /// 내용 배열의 각 항목의 내용은 다음과 같은 형식입니다.
+    /// text: "설명 내용" - 필수로 작성
+    /// imagePath: "이미지 경로" (Resources/{imagePath}로 설정되어 있습니다. 확장자는 쓰지 않습니다.) - 선택사항
+    /// waitJob: "대기 작업 이름" (WaitJob 열거형에 정의된 값 중 하나) - 선택사항
+    /// </summary>
+
 
     public class DescriptionPanel : MonoBehaviour
     {
@@ -183,7 +198,7 @@ namespace Data
             nextButton.gameObject.SetActive(isActive && chatIndex < descriptionTextList.descriptions.Length - 1);
             backButton.gameObject.SetActive(isActive && chatIndex > 0);
         }
-        
+
         public void JobComplete(WaitJob job)
         {
             if (job == currentWaitJob)
