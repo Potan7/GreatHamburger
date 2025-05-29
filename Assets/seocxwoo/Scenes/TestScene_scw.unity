@@ -2057,6 +2057,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crate_Cheese
       objectReference: {fileID: 0}
+    - target: {fileID: 356191163123439246, guid: f7b63a7568f0f094386cbe32f6176099, type: 3}
+      propertyPath: ingredientPrefab
+      value: 
+      objectReference: {fileID: 2354832468737919606, guid: 98c056cfd87c74942ba07ed886b7e548, type: 3}
     - target: {fileID: 4853209047754847724, guid: f7b63a7568f0f094386cbe32f6176099, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8
