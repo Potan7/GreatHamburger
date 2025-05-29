@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using MapObject;
+using Data;
 using MapObject.Ingredients;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,14 +11,14 @@ namespace MapObject
 
     public class OvenInside : MonoBehaviour
     {
-        public MapObject.Oven oven;
+        public Oven oven;
         public Transform ingredientPoint;
         public Image progressBar;
 
         public float cookingTime = 3f; // Time in seconds to cook the ingredient
 
-        bool isCooking = false;
-        PlayerIngredient ingredient;
+        // bool isCooking = false;
+        readonly HashSet<PlayerIngredient> ingredients = new HashSet<PlayerIngredient>();
 
         void Start()
         {
@@ -26,31 +27,28 @@ namespace MapObject
 
         void OnTriggerEnter(Collider other)
         {
-            if (isCooking || !oven.isOvenDoorOpen)
-                return;
-
             if (other.TryGetComponent(out PlayerIngredient insideIngredient))
             {
-                ingredient = insideIngredient;
+                ingredients.Add(insideIngredient);
             }
         }
 
         void OnTriggerExit(Collider other)
         {
-            if (ingredient != null && ingredient.gameObject == other.gameObject)
+            if (other.TryGetComponent(out PlayerIngredient insideIngredient))
             {
-                ingredient = null;
+                ingredients.Remove(insideIngredient);
             }
 
-            if (isCooking)
-            {
-                isCooking = false;
-            }
+            // if (isCooking)
+            // {
+            //     isCooking = false;
+            // }
         }
 
         public void OnOvenClosed()
         {
-            if (ingredient == null)
+            if (ingredients.Count == 0)
                 return;
 
             PutIngredientToOven().Forget();
@@ -58,8 +56,11 @@ namespace MapObject
 
         async UniTask PutIngredientToOven()
         {
-            ingredient.SetPosition(ingredientPoint.position);
-            isCooking = true;
+            // isCooking = true;
+            foreach (var ingredient in ingredients)
+            {
+                ingredient.SetInteractable(false);
+            }
 
             oven.ForceCloseOvenDoor();
             await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
@@ -75,9 +76,18 @@ namespace MapObject
 
             progressBar.gameObject.SetActive(false);
             Debug.Log("Oven cooking done");
-            ingredient = ingredient.DoCooking();
 
-            ingredient.ReEnable();
+            var ingredientsCopy = new List<PlayerIngredient>(ingredients);
+
+            foreach (var ingredient in ingredientsCopy)
+            {
+                ingredients.Remove(ingredient);
+                var cookedIngredient = ingredient.DoCooking();
+                ingredients.Add(cookedIngredient);
+                cookedIngredient.SetInteractable(true);
+            }
+
+            FindAnyObjectByType<DescriptionPanel>().JobComplete(WaitJob.WaitForCooking);
 
             oven.OpenDoor();
         }
