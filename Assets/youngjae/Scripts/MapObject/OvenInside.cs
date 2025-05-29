@@ -5,77 +5,81 @@ using MapObject.Ingredients;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OvenInside : MonoBehaviour
+namespace MapObject
 {
-    public Oven oven;
-    public Transform ingredientPoint;
-    public Image progressBar;
 
-    public float cookingTime = 3f; // Time in seconds to cook the ingredient
-
-    bool isCooking = false;
-    PlayerIngredient ingredient;
-
-    void Start()
+    public class OvenInside : MonoBehaviour
     {
-        oven.OnDoorClosed += OnOvenClosed;
-    }
+        public MapObject.Oven oven;
+        public Transform ingredientPoint;
+        public Image progressBar;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (isCooking || !oven.isOvenDoorOpen)
-            return;
+        public float cookingTime = 3f; // Time in seconds to cook the ingredient
 
-        if (other.TryGetComponent(out PlayerIngredient insideIngredient))
+        bool isCooking = false;
+        PlayerIngredient ingredient;
+
+        void Start()
         {
-            ingredient = insideIngredient;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (ingredient != null && ingredient.gameObject == other.gameObject)
-        {
-            ingredient = null;
+            oven.OnDoorClosed += OnOvenClosed;
         }
 
-        if (isCooking)
+        void OnTriggerEnter(Collider other)
         {
-            isCooking = false;
-        }
-    }
+            if (isCooking || !oven.isOvenDoorOpen)
+                return;
 
-    public void OnOvenClosed()
-    {
-        if (ingredient == null)
-            return;
-
-        PutIngredientToOven().Forget();
-    }
-
-    async UniTask PutIngredientToOven()
-    {
-        ingredient.SetPosition(ingredientPoint.position);
-        isCooking = true;
-
-        oven.ForceCloseOvenDoor();
-        await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
-
-        progressBar.gameObject.SetActive(true);
-        float time = 0;
-        while (time < cookingTime)
-        {
-            time += Time.deltaTime;
-            progressBar.fillAmount = time / cookingTime;
-            await UniTask.Yield();
+            if (other.TryGetComponent(out PlayerIngredient insideIngredient))
+            {
+                ingredient = insideIngredient;
+            }
         }
 
-        progressBar.gameObject.SetActive(false);
-        Debug.Log("Oven cooking done");
-        ingredient = ingredient.DoCooking();
+        void OnTriggerExit(Collider other)
+        {
+            if (ingredient != null && ingredient.gameObject == other.gameObject)
+            {
+                ingredient = null;
+            }
 
-        ingredient.ReEnable();
+            if (isCooking)
+            {
+                isCooking = false;
+            }
+        }
 
-        oven.OpenDoor();
+        public void OnOvenClosed()
+        {
+            if (ingredient == null)
+                return;
+
+            PutIngredientToOven().Forget();
+        }
+
+        async UniTask PutIngredientToOven()
+        {
+            ingredient.SetPosition(ingredientPoint.position);
+            isCooking = true;
+
+            oven.ForceCloseOvenDoor();
+            await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
+
+            progressBar.gameObject.SetActive(true);
+            float time = 0;
+            while (time < cookingTime)
+            {
+                time += Time.deltaTime;
+                progressBar.fillAmount = time / cookingTime;
+                await UniTask.Yield();
+            }
+
+            progressBar.gameObject.SetActive(false);
+            Debug.Log("Oven cooking done");
+            ingredient = ingredient.DoCooking();
+
+            ingredient.ReEnable();
+
+            oven.OpenDoor();
+        }
     }
 }
