@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Crate : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject ingredientPrefab;
+    [SerializeField] private List<GameObject> outputList = new List<GameObject>();
 
     public void Interact(GameObject interactor)
     {
@@ -27,9 +27,10 @@ public class Crate : MonoBehaviour, IInteractable
             return;
         }
         
-        GameObject item = Instantiate(ingredientPrefab, hand);
+        GameObject item = Instantiate(outputList[0], hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
+        outputList.RemoveAt(0);
 
         Debug.Log($"{interactor.name} picked up {item.name}");
         controller.SetBusy(false);
