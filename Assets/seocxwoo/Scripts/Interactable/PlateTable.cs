@@ -1,26 +1,38 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlateTable : MonoBehaviour, IInteractable
 {
+    [SerializeField] private GameObject robotPrefab;
+
+    private RobotController robot;
+    private Animator animator;
+    private Transform hand;
+
     private float offset = 0f;
 
-    public void Interact(GameObject interactor)
+    void Start()
     {
-        Debug.Log("Robot과 PlateTable Interact 시도");
+        robot = robotPrefab.GetComponent<RobotController>();
+        animator = robotPrefab.GetComponent<Animator>();
+        hand = robotPrefab.transform.Find("Hand");
+    }
 
-        RobotController controller = interactor.GetComponent<RobotController>();
-        Transform hand = interactor.transform.Find("Hand");
+    public IEnumerator Interact()
+    {
+        Debug.Log("Robot Interact with PlateTable.");
 
         if (hand == null)
         {
             Debug.LogWarning("Hand transform not found on interactor.");
-            return;
+            yield return null;
         }
 
         if (hand.childCount == 0)
         {
             Debug.LogWarning("Robot has no item.");
-            return;
+            animator.SetTrigger("Error");
+            yield return null;
         }
 
         GameObject item = hand.GetChild(0).gameObject;
@@ -30,10 +42,29 @@ public class PlateTable : MonoBehaviour, IInteractable
         offset += item.GetComponent<Ingredient>().GetHeight();
         item.transform.localRotation = Quaternion.identity;
 
-        controller.SetBusy(false);
+        animator.SetTrigger("PutDown");
+        yield return WaitForAnimation(animator, "PutDown");
+
+        Debug.Log("put down");
+        robot.SetBusy(false);
     }
 
-    void OnDrawGizmos()
+    private IEnumerator WaitForAnimation(Animator animator, string stateName)
+    {
+        // 현재 상태가 원하는 상태가 될 때까지 대기
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        {
+            yield return null;
+        }
+
+        // 애니메이션이 끝날 때까지 대기
+        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
+        }
+    }
+
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Vector3 localOffset = new Vector3(0f, 0f, 1f);

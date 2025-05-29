@@ -55,31 +55,31 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
         yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
-        yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Tomatoes"));
-        yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Tomatoes"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Cheese"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Cheese"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)
     {
-        // 로봇이 바쁘면 대기(애니메이션 등으로 인해)
+        // 로봇이 바쁘면 대기 (앞선 동작 수행 중)
         while (isBusy)
         {
             yield return null;
@@ -87,8 +87,8 @@ public class RobotController : MonoBehaviour
 
         // 로봇이 이동 후 상호작용하도록 구성
         yield return StartCoroutine(MoveToNode(name));
-        //robotInteraction.Interact();
-        robotInteraction.PlayAnim(name);
+        robotInteraction.Interact();
+        //robotInteraction.PlayAnim(name);
     }
 
     private IEnumerator MoveToNode(string name)

@@ -1,51 +1,77 @@
-using NUnit.Framework;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Oven : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject cookedBurger;
+    [SerializeField] private GameObject robotPrefab;
+    [SerializeField] private GameObject ingredientPrefab;
 
-    public void Interact(GameObject interactor)
+    private RobotController robot;
+    private Animator animator;
+    private Transform hand;
+
+    void Start()
     {
-        Debug.Log("Robot과 Oven Interact 시도");
+        robot = robotPrefab.GetComponent<RobotController>();
+        animator = robotPrefab.GetComponent<Animator>();
+        hand = robotPrefab.transform.Find("Hand");
+    }
 
-        RobotController controller = interactor.GetComponent<RobotController>();
-        Transform hand = interactor.transform.Find("Hand");
+    public IEnumerator Interact()
+    {
+        Debug.Log("Robot Interact with Crate.");
 
         if (hand == null)
         {
             Debug.LogWarning("Hand transform not found on interactor.");
-            return;
+            yield return null;
         }
 
         if (hand.childCount == 0)
         {
-            Debug.Log("Robot has no item. okay");
+            Debug.LogWarning("Robot has no item.");
+            animator.SetTrigger("Error");
+            yield return null;
         }
 
-        if (hand.childCount > 0)
-        {
-            GameObject item = hand.GetChild(0).gameObject;
-            Destroy(item);
-        }
-        else
-        {
-            GameObject item = Instantiate(cookedBurger);
-            item.transform.parent = hand;
-            item.transform.localPosition = Vector3.zero;
-            item.transform.localRotation = Quaternion.identity;
+        GameObject item = hand.GetChild(0).gameObject;
+        Destroy(item);
 
-            Debug.Log($"{interactor.name} picked up {item.name}");
-            controller.SetBusy(false);
+        animator.SetTrigger("Wait");
+        yield return WaitForAnimation(animator, "Wait");
+
+        animator.SetTrigger("PickUp");
+        yield return WaitForAnimation(animator, "PickUp");
+
+        item = Instantiate(ingredientPrefab, hand);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localRotation = Quaternion.identity;
+
+        Debug.Log("picked up");
+        robot.SetBusy(false);
+    }
+
+    private IEnumerator WaitForAnimation(Animator animator, string stateName)
+    {
+        // 현재 상태가 원하는 상태가 될 때까지 대기
+        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        {
+            yield return null;
+        }
+
+        // 애니메이션이 끝날 때까지 대기
+        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        {
+            yield return null;
         }
     }
 
-    public void WaitForBurger(GameObject interactor)
+    private void OnDrawGizmos()
     {
-        Debug.Log("wait is working");
-
-        Animator animator = interactor.GetComponent<Animator>();
-        animator.SetBool("NeedTime", false);
+        Gizmos.color = Color.red;
+        Vector3 localOffset = new Vector3(0f, 0f, 1f);
+        Vector3 worldOffset = transform.rotation * localOffset;
+        Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
+        Gizmos.DrawSphere(pos, 0.1f);
     }
 }

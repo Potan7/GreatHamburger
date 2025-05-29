@@ -835,6 +835,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1112109632}
     m_Modifications:
+    - target: {fileID: 3030167481047568057, guid: 418d5a62764a760489f88e90cc72035b, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 5197324402228299629, guid: 418d5a62764a760489f88e90cc72035b, type: 3}
       propertyPath: m_Name
       value: Crate_Buns
@@ -1912,6 +1916,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crate_Lettuce
       objectReference: {fileID: 0}
+    - target: {fileID: 3113494883348359979, guid: e081a3b6fd7e06f4b8450e7953808115, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 6223420124564171487, guid: e081a3b6fd7e06f4b8450e7953808115, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4
@@ -1966,6 +1974,11 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 762927438472379065, guid: e081a3b6fd7e06f4b8450e7953808115, type: 3}
   m_PrefabInstance: {fileID: 1699848213}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1721875571 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6579236153830433576, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
+  m_PrefabInstance: {fileID: 6006310865424944249}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1721875576 stripped
 Transform:
@@ -2575,6 +2588,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlateTable
       objectReference: {fileID: 0}
+    - target: {fileID: 6466787428170729487, guid: 60c6dd84107afef428f003bd1c013dab, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 8729170199841634888, guid: 60c6dd84107afef428f003bd1c013dab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2

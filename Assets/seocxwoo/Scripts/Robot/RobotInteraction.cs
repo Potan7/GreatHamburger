@@ -61,33 +61,8 @@ public class RobotInteraction : MonoBehaviour
         {
             GameObject obj = detector.GetInteractable();
             IInteractable interactable = obj.GetComponent<IInteractable>();
-            interactable.Interact(gameObject);
-        }
-    }
 
-    public void Cut()
-    {
-        ObjectDetector detector = interactableDetector.GetComponent<ObjectDetector>();
-
-        // detector가 감지한 오브젝트의 Interact() 실행
-        if (detector.IsInteractable())
-        {
-            GameObject obj = detector.GetInteractable();
-            CuttingBoard interactable = obj.GetComponent<CuttingBoard>();
-            interactable.CutIngredient(gameObject);
-        }
-    }
-
-    public void Wait()
-    {
-        ObjectDetector detector = interactableDetector.GetComponent<ObjectDetector>();
-
-        // detector가 감지한 오브젝트의 Interact() 실행
-        if (detector.IsInteractable())
-        {
-            GameObject obj = detector.GetInteractable();
-            Oven interactable = obj.GetComponent<Oven>();
-            interactable.WaitForBurger(gameObject);
+            StartCoroutine(interactable.Interact());
         }
     }
 }
