@@ -16,6 +16,10 @@ public class CuttingBoard : MonoBehaviour, IInteractable
 
         if (hand == null)
         {
+
+            //Animator animator = interactor.GetComponent<Animator>();
+            //animator.SetTrigger("Error");
+
             Debug.LogWarning("Hand transform not found on interactor.");
             return;
         }
@@ -61,6 +65,10 @@ public class CuttingBoard : MonoBehaviour, IInteractable
 
             case "tomato":
                 SpawnCuttedIngredient(1);
+                break;
+
+            case "cheese":
+                SpawnCuttedIngredient(2);
                 break;
         }
 
