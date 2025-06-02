@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0887d597024fa8645aaba2c1bff66b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  robotPrefab: {fileID: 0}
   ingredientPrefabList:
   - {fileID: 8355956452738159776, guid: cfc1b973080f80049bb3f45c9caba845, type: 3}
   - {fileID: 5365277558419445718, guid: bdc702b425a51b04f8403c2369d88e5a, type: 3}

@@ -23,25 +23,26 @@ public class CrateRandom : MonoBehaviour, IInteractable
 
     public IEnumerator Interact()
     {
-        Debug.Log("Robot Interact with Crate.");
+        Debug.Log("Robot Interact with Crate_Random.");
 
-        if (hand == null)
-        {
-            Debug.LogWarning("Hand not found on Robot.");
-            yield return null;
-        }
-
-        // 기존 아이템이 있으면 줍지 않음 (옵션)
+        // Hand에 이미 아이템이 있으면 줍지 않음 (에러 발생)
         if (hand.childCount > 0)
         {
             Debug.LogWarning("Robot Already holding an item.");
-            // 여기서 다른 처리 필요
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
             animator.SetTrigger("Error");
-            yield return null;
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
         }
 
+        // Crate_Random에서 아이템 줍기 (리스트 중 랜덤 아이템 반환, 천장 5회)
+        robot.SetBusy(true);
         animator.SetTrigger("PickUp");
-        yield return WaitForAnimation(animator, "PickUp");
+        yield return new WaitForSeconds(1.0f);
 
         int index = Random.Range(0, ingredientPrefabList.Count);
         if (count == 4 && index == prevIndex)
@@ -62,24 +63,7 @@ public class CrateRandom : MonoBehaviour, IInteractable
         GameObject item = Instantiate(ingredientPrefabList[index], hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
-
-        Debug.Log("picked up");
         robot.SetBusy(false);
-    }
-
-    private IEnumerator WaitForAnimation(Animator animator, string stateName)
-    {
-        // 현재 상태가 원하는 상태가 될 때까지 대기
-        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            yield return null;
-        }
-
-        // 애니메이션이 끝날 때까지 대기
-        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-        {
-            yield return null;
-        }
     }
 
     private void OnDrawGizmos()

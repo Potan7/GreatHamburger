@@ -6,7 +6,8 @@ using UnityEngine;
 public class CuttingBoard : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject robotPrefab;
-    [SerializeField] private GameObject ingredientPrefab;
+    [SerializeField] private List<GameObject> cuttedIngredientList = new List<GameObject>();
+    [SerializeField] private GameObject storage;
 
     private RobotController robot;
     private Animator animator;
@@ -21,112 +22,75 @@ public class CuttingBoard : MonoBehaviour, IInteractable
 
     public IEnumerator Interact()
     {
-        Debug.Log("Robot Interact with Crate.");
+        Debug.Log("Robot Interact with CuttingBoard.");
 
-        if (hand == null)
-        {
-            Debug.LogWarning("Hand transform not found on interactor.");
-            yield return null;
-        }
-
+        // Hand에 내려놓을 아이템이 없음 (에러 발생)
         if (hand.childCount == 0)
         {
             Debug.LogWarning("Robot has no item.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
             animator.SetTrigger("Error");
-            yield return null;
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
         }
 
         GameObject item = hand.GetChild(0).gameObject;
-        Destroy(item);
 
-        animator.SetTrigger("Wait");
-        yield return WaitForAnimation(animator, "Wait");
+        // CuttingBoard에 내려놓을 아이템이 적합하지 않음 (에러 발생)
+        if (!IsSuitable(item.name))
+        {
+            Debug.LogWarning("Item is not suitable.");
 
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
+            animator.SetTrigger("Error");
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
+        }
+
+        // CuttingBoard 위에 아이템 놓기
+        item = hand.GetChild(0).gameObject;
+        item.transform.parent = transform;
+        item.transform.localPosition = new Vector3(0, 1.15f, 0);
+        item.transform.localRotation = Quaternion.identity;
+        storage = item;
+
+        // CuttingBoard에 재료 내려놓기->썰기->줍기
+        robot.SetBusy(true);
+        animator.SetInteger("NextAction", 1);
+        animator.SetTrigger("PutDown");
+        yield return new WaitForSeconds(2.0f);
+        CutIngredient();
         animator.SetTrigger("PickUp");
-        yield return WaitForAnimation(animator, "PickUp");
-
-        item = Instantiate(ingredientPrefab, hand);
+        yield return new WaitForSeconds(1.0f);
+        item = storage;
+        item.transform.parent = hand;
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
-
-        Debug.Log("picked up");
+        storage = null;
         robot.SetBusy(false);
     }
 
-    private IEnumerator WaitForAnimation(Animator animator, string stateName)
+    private bool IsSuitable(string name)
     {
-        // 현재 상태가 원하는 상태가 될 때까지 대기
-        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        if (name == "food_ingredient_lettuce(Clone)" || name == "food_ingredient_tomato(Clone)")
         {
-            yield return null;
-        }
-
-        // 애니메이션이 끝날 때까지 대기
-        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-        {
-            yield return null;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Vector3 localOffset = new Vector3(0f, 0f, 1f);
-        Vector3 worldOffset = transform.rotation * localOffset;
-        Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
-        Gizmos.DrawSphere(pos, 0.1f);
-    }
-
-    [SerializeField] private List<GameObject> cuttedIngredientList = new List<GameObject>();
-    [SerializeField] private GameObject storage;
-
-    public void Interact(GameObject interactor)
-    {
-        Debug.Log("Robot과 CuttingBoard Interact 시도");
-
-        RobotController controller = interactor.GetComponent<RobotController>();
-        Transform hand = interactor.transform.Find("Hand");
-
-        if (hand == null)
-        {
-
-            //Animator animator = interactor.GetComponent<Animator>();
-            //animator.SetTrigger("Error");
-
-            Debug.LogWarning("Hand transform not found on interactor.");
-            return;
-        }
-
-        if (hand.childCount == 0)
-        {
-            Debug.Log("Robot has no item. okay");
-        }
-
-        if (hand.childCount > 0)
-        {
-            GameObject item = hand.GetChild(0).gameObject;
-            item.transform.parent = transform;
-            item.transform.localPosition = new Vector3(0, 1.15f, 0);
-            item.transform.localRotation = Quaternion.identity;
-            storage = item;
+            return true;
         }
         else
         {
-            GameObject item = storage;
-            item.transform.parent = hand;
-            item.transform.localPosition = Vector3.zero;
-            item.transform.localRotation = Quaternion.identity;
-            storage = null;
-
-            Debug.Log($"{interactor.name} picked up {item.name}");
-            controller.SetBusy(false);
+            return false;
         }
     }
 
-    public void CutIngredient(GameObject interactor)
+    private void CutIngredient()
     {
-        Debug.Log("cutIngredient is working");
-
         Ingredient ingredient = storage.GetComponent<Ingredient>();
         string name = ingredient.GetName();
         
@@ -139,15 +103,7 @@ public class CuttingBoard : MonoBehaviour, IInteractable
             case "tomato":
                 SpawnCuttedIngredient(1);
                 break;
-
-            case "cheese":
-                SpawnCuttedIngredient(2);
-                break;
         }
-
-        Animator animator = interactor.GetComponent<Animator>();
-        animator.SetBool("NeedTime", false);
-        // 애니메이터 꼭 필요한지 체크
     }
 
     private void SpawnCuttedIngredient(int index)
@@ -158,5 +114,14 @@ public class CuttingBoard : MonoBehaviour, IInteractable
         cutted.transform.localRotation = Quaternion.identity;
         Destroy(storage);
         storage = cutted;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Vector3 localOffset = new Vector3(0f, 0f, 1f);
+        Vector3 worldOffset = transform.rotation * localOffset;
+        Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
+        Gizmos.DrawSphere(pos, 0.1f);
     }
 }

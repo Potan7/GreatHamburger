@@ -19,50 +19,62 @@ public class Oven : MonoBehaviour, IInteractable
 
     public IEnumerator Interact()
     {
-        Debug.Log("Robot Interact with Crate.");
+        Debug.Log("Robot Interact with Oven.");
 
-        if (hand == null)
-        {
-            Debug.LogWarning("Hand transform not found on interactor.");
-            yield return null;
-        }
-
+        // Hand에 내려놓을 아이템이 없음 (에러 발생)
         if (hand.childCount == 0)
         {
             Debug.LogWarning("Robot has no item.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
             animator.SetTrigger("Error");
-            yield return null;
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
         }
 
         GameObject item = hand.GetChild(0).gameObject;
+
+        // Oven에 내려놓을 아이템이 적합하지 않음 (에러 발생)
+        if (!IsSuitable(item.name))
+        {
+            Debug.LogWarning("Item is not suitable.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
+            animator.SetTrigger("Error");
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
+        }
+
         Destroy(item);
 
-        animator.SetTrigger("Wait");
-        yield return WaitForAnimation(animator, "Wait");
-
+        // Oven에 패티 내려놓기->기다리기->줍기
+        robot.SetBusy(true);
+        animator.SetInteger("NextAction", 2);
+        animator.SetTrigger("PutDown");
+        yield return new WaitForSeconds(2.0f);
         animator.SetTrigger("PickUp");
-        yield return WaitForAnimation(animator, "PickUp");
-
+        yield return new WaitForSeconds(1.0f);
         item = Instantiate(ingredientPrefab, hand);
         item.transform.localPosition = Vector3.zero;
         item.transform.localRotation = Quaternion.identity;
-
-        Debug.Log("picked up");
         robot.SetBusy(false);
     }
 
-    private IEnumerator WaitForAnimation(Animator animator, string stateName)
+    private bool IsSuitable(string name)
     {
-        // 현재 상태가 원하는 상태가 될 때까지 대기
-        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        if (name == "food_ingredient_burger_uncooked(Clone)")
         {
-            yield return null;
+            return true;
         }
-
-        // 애니메이션이 끝날 때까지 대기
-        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
+        else
         {
-            yield return null;
+            return false;
         }
     }
 

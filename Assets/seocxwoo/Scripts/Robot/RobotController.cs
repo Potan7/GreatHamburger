@@ -58,9 +58,9 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Tomatoes"));
         //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
@@ -75,6 +75,9 @@ public class RobotController : MonoBehaviour
 
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)

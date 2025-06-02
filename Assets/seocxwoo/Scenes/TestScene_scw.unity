@@ -127,6 +127,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1112109632}
     m_Modifications:
+    - target: {fileID: -227539937224578639, guid: b583e2d20f1571f43b043d41422d7741, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 4164982375828893404, guid: b583e2d20f1571f43b043d41422d7741, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6
@@ -409,6 +413,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1112109632}
     m_Modifications:
+    - target: {fileID: -7128839443308039301, guid: f706e464130f68641ac537c7f2e06bec, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 5614406246894162885, guid: f706e464130f68641ac537c7f2e06bec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -911,12 +919,12 @@ GameObject:
   - component: {fileID: 1000923702}
   - component: {fileID: 1000923704}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: Alert
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1000923701
 Transform:
   m_ObjectHideFlags: 0
@@ -2175,9 +2183,9 @@ PrefabInstance:
       value: Crate_Cheese
       objectReference: {fileID: 0}
     - target: {fileID: 356191163123439246, guid: f7b63a7568f0f094386cbe32f6176099, type: 3}
-      propertyPath: ingredientPrefab
+      propertyPath: robotPrefab
       value: 
-      objectReference: {fileID: 2354832468737919606, guid: 98c056cfd87c74942ba07ed886b7e548, type: 3}
+      objectReference: {fileID: 1721875571}
     - target: {fileID: 4853209047754847724, guid: f7b63a7568f0f094386cbe32f6176099, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8
@@ -2699,6 +2707,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Oven
       objectReference: {fileID: 0}
+    - target: {fileID: 5351039556591692518, guid: 21fa882b43dfb2c498385259e475a5ab, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3124,9 +3136,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7490945220082591914, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
+      propertyPath: robotPrefab
+      value: 
+      objectReference: {fileID: 1721875571}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 7954945749808299625, guid: 6e35283339a748d45b14ef616be8988e, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e35283339a748d45b14ef616be8988e, type: 3}

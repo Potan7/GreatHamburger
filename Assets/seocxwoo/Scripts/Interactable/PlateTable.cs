@@ -22,46 +22,32 @@ public class PlateTable : MonoBehaviour, IInteractable
     {
         Debug.Log("Robot Interact with PlateTable.");
 
-        if (hand == null)
-        {
-            Debug.LogWarning("Hand transform not found on interactor.");
-            yield return null;
-        }
-
+        // Hand에 내려놓을 아이템이 없음 (에러 발생)
         if (hand.childCount == 0)
         {
             Debug.LogWarning("Robot has no item.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
             animator.SetTrigger("Error");
-            yield return null;
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
         }
 
+        // PlateTable 위 접시에 아이템 내려놓기(쌓기)
+        robot.SetBusy(true);
         GameObject item = hand.GetChild(0).gameObject;
         Transform plate = transform.Find("plate");
         item.transform.parent = plate;
         item.transform.localPosition = new Vector3(0, offset, 0);
         offset += item.GetComponent<Ingredient>().GetHeight();
         item.transform.localRotation = Quaternion.identity;
-
+        animator.SetInteger("NextAction", 0);
         animator.SetTrigger("PutDown");
-        yield return WaitForAnimation(animator, "PutDown");
-
-        Debug.Log("put down");
+        yield return new WaitForSeconds(1.0f);
         robot.SetBusy(false);
-    }
-
-    private IEnumerator WaitForAnimation(Animator animator, string stateName)
-    {
-        // 현재 상태가 원하는 상태가 될 때까지 대기
-        while (!animator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            yield return null;
-        }
-
-        // 애니메이션이 끝날 때까지 대기
-        while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f)
-        {
-            yield return null;
-        }
     }
 
     private void OnDrawGizmos()
