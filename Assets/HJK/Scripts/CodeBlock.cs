@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using TMPro;
+using UnityEngine.UI;
 
 public class CodeBlock : MonoBehaviour
 {
@@ -18,8 +19,13 @@ public class CodeBlock : MonoBehaviour
     
     private void Awake()
     {
-        upBtn.SetActive(false);
-        downBtn.SetActive(false);
+        if (upBtn != null && upBtn != null)
+        {
+            upBtn.SetActive(false);
+            downBtn.SetActive(false);
+            upBtn.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
+            downBtn.GetComponent<Image>().alphaHitTestMinimumThreshold = 0.1f;
+        }
 
         GetComponent<XRGrabInteractable>().selectExited.AddListener(OnRelease);
     }
@@ -84,25 +90,45 @@ public class CodeBlock : MonoBehaviour
     }
     public string GetSelectedContents()
     {
-        //stage 정보 확인 -> type에 맞는 리스트 받아오기 -> 리스트의 selectNumber번째 내용 반환
-
         return selectNumber.ToString();
     }
 
     public void OnClickBtn(int dir) //1 or -1
     {
+        if (codeBlockType == CodeBlockType.Count) limitNumber = 10;
+        else if (codeBlockType == CodeBlockType.Ingredient) limitNumber = BlockCodingUIManager.instance.ingredientList.Count;
+        else if (codeBlockType == CodeBlockType.Node) limitNumber = BlockCodingUIManager.instance.nodeList.Count;
+
         selectNumber += dir;
         if (selectNumber <= 0) 
         {
             selectNumber = 0;
         }
-        if (selectNumber >= limitNumber)
+        if (selectNumber >= limitNumber - 1)
         {
-            selectNumber = limitNumber;
+            selectNumber = limitNumber - 1;
         }
 
         downBtn.SetActive(selectNumber > 0);
-        upBtn.SetActive(selectNumber < limitNumber);
-        blockText.text = selectNumber.ToString();
+        upBtn.SetActive(selectNumber < limitNumber - 1);
+
+        SetBlocktext();
+    }
+
+    private void SetBlocktext()
+    {
+        if (codeBlockType == CodeBlockType.Count) 
+        {
+            blockText.text = selectNumber.ToString();
+        }
+        else if (codeBlockType == CodeBlockType.Ingredient)
+        {
+            blockText.text = BlockCodingUIManager.instance.ingredientList[selectNumber];
+        }
+        else if (codeBlockType == CodeBlockType.Node)
+        {
+            blockText.text = BlockCodingUIManager.instance.nodeList[selectNumber];
+        }
+        BlockCodingUIManager.instance.SetCodeWindow();
     }
 }

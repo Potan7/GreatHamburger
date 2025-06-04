@@ -40,4 +40,13 @@ public class InteractableRegistry : MonoBehaviour
         Debug.LogWarning("Can't Find " +  name + ".");
         return null;
     }
+    public List<string> GetNodeInfos() 
+    {
+        List<string> str = new();
+        foreach (var i in interactables) 
+        {
+            str.Add(i.name);
+        }
+        return str;
+    }
 }

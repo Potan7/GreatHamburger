@@ -15,12 +15,41 @@ public class BlockCodingUIManager : MonoBehaviour
 
     [SerializeField] private BlockCodeExecutor executor;
 
+    public GameObject robot;
+    public InteractableRegistry mapInfo;
+
+    [SerializeField] private GameObject enterIDEBtn;
+    [SerializeField] private GameObject backToKitchenBtn;
+    public bool isInIDE;
+
+    [SerializeField] private GameObject player;
+    [SerializeField] private Vector3 codingSpawnPosition;
+    [SerializeField] private Vector3 kitchenSpawnPosition;
+    public List<string> ingredientList { get; private set; }
+    public List<string> nodeList { get; private set; }
+
     private void Awake()
     {
         instance = this;
 
         blockWindow.SetActive(true);
         codeWindow.SetActive(false);
+
+        ingredientList = new();
+        nodeList = new();
+        if (mapInfo != null) 
+        {
+            nodeList = mapInfo.GetNodeInfos();
+        }
+
+        //테스트용
+        for (int i = 0; i < 10; i++)
+        {
+            ingredientList.Add("igrd " + i);
+        }
+
+        enterIDEBtn.SetActive(!isInIDE);
+        backToKitchenBtn.SetActive(isInIDE);
     }
     public List<List<CodeBlock>> GetSlotContents()
     {
@@ -59,17 +88,22 @@ public class BlockCodingUIManager : MonoBehaviour
                         indent = indent.Substring(indent.Length - 2);
                     }
                 }
-                string str = blockName[(int)codeBlocks[i][0].codeBlockType];
+
+                List<CodeBlockType> types = new();
+                List<string> str = new();
+                string mainBlock = blockName[(int)codeBlocks[i][0].codeBlockType];
                 if (instance.language == SystemLanguage.Korean)
                 {
-                    str = koreanBlockName[(int)codeBlocks[i][0].codeBlockType];
+                    mainBlock = koreanBlockName[(int)codeBlocks[i][0].codeBlockType];
                 }
-                str = indent + str;
-                for (int j = 1; j < codeBlocks[i].Count; j++) 
+                types.Add(codeBlocks[i][0].codeBlockType);
+                str.Add(mainBlock);
+                for (int j = 1; j < codeBlocks[i].Count; j++)
                 {
-                    str += " " + codeBlocks[i][j].GetContents();
+                    types.Add(codeBlocks[i][j].codeBlockType);
+                    str.Add(codeBlocks[i][j].GetContents());
                 }
-                codeContent.transform.GetChild(i).GetComponent<CodeTextUI>().InitCodeTextUI(codeBlocks[i][0].codeBlockType, str);
+                codeContent.transform.GetChild(i).GetComponent<CodeTextUI>().InitCodeTextUI(types, indent, str);
 
                 if (codeBlocks[i][0].codeBlockType == CodeBlockType.For ||
                     codeBlocks[i][0].codeBlockType == CodeBlockType.If ||
@@ -86,7 +120,7 @@ public class BlockCodingUIManager : MonoBehaviour
         for (int i = 0; i < codeContent.transform.childCount; i++)
         {
             GameObject code = codeContent.transform.GetChild(i).gameObject;
-            if (code == null) break;
+            if (code == null || code.GetComponent<CodeTextUI>().blockTypes == null) break;
             blockCodes.Add(code);
         }
         return blockCodes;
@@ -99,9 +133,26 @@ public class BlockCodingUIManager : MonoBehaviour
         codeWindow.SetActive(!isOnBlockWindow);
         SetCodeWindow();
     }
+    public void OnClickStartCodeButton()
+    {
+        OnClickChangeWindowButton(0);
+        executor.InitBlockCodeExecutor(GetBlockCode(), robot);
+    }
     public void OnClickBackToKitchenButton()
     {
-        executor.InitBlockCodeExecutor(GetBlockCode());
+        isInIDE = false;
+        enterIDEBtn.SetActive(!isInIDE);
+        backToKitchenBtn.SetActive(isInIDE);
+
+        player.transform.position = kitchenSpawnPosition;
+    }
+    public void OnClickEnterIDEButton()
+    {
+        isInIDE = true;
+        enterIDEBtn.SetActive(!isInIDE);
+        backToKitchenBtn.SetActive(isInIDE);
+
+        player.transform.position = codingSpawnPosition;
     }
 
     public bool IsSentenceTypeBlock(CodeBlockType t)

@@ -75,6 +75,8 @@ public class CodeBlockSlot : MonoBehaviour
         {
             subslots[i].SetActive(true);
         }
+
+        BlockCodingUIManager.instance.SetCodeWindow();
     }
     public void ResetSlot()
     {
@@ -88,6 +90,8 @@ public class CodeBlockSlot : MonoBehaviour
             subslots[i].SetActive(false);
         }
         StartCoroutine(SlotCoolTime());
+
+        BlockCodingUIManager.instance.SetCodeWindow();
     }
     IEnumerator SlotCoolTime() 
     {

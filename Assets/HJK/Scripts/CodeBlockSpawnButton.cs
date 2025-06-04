@@ -13,6 +13,8 @@ public class CodeBlockSpawnButton : MonoBehaviour
     }
     public void OnButtonClick()
     {
+        if (!BlockCodingUIManager.instance.isInIDE) return;
+
         var block = Instantiate(blockPrefab, transform.position, transform.rotation);
         block.GetComponent<CodeBlock>().InitCodeBlock(codeBlockType);
     }

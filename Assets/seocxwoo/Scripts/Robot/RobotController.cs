@@ -38,7 +38,7 @@ public class RobotController : MonoBehaviour
         robotInteraction = GetComponent<RobotInteraction>();
 
         // 작동 시작
-        StartCoroutine(RunRobotProgram());
+        //StartCoroutine(RunRobotProgram());
     }
 
     void LoadStageGridData()
@@ -70,7 +70,7 @@ public class RobotController : MonoBehaviour
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
     }
 
-    private IEnumerator MoveToNodeAndInteract(string name)
+    public IEnumerator MoveToNodeAndInteract(string name)
     {
         // 로봇이 바쁘면 대기(애니메이션 등으로 인해)
         while (isBusy)
