@@ -24,6 +24,15 @@ public class ObjectDetector : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("Interactable"))
+        {
+            isInteractable = true;
+            interactable = other.gameObject;
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("Interactable"))

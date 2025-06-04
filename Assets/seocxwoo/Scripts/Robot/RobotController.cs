@@ -80,12 +80,11 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        for (int i = 0; i < 5; i++)
+        {
+            yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
+            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        }
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)
@@ -103,6 +102,8 @@ public class RobotController : MonoBehaviour
 
     private IEnumerator MoveToNode(string name)
     {
+        Debug.Log("Robot move to " + name + ".");
+
         // 목적지 정보 저장
         Transform destination = interactableRegistry.GetTransform(name);
 
