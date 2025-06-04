@@ -13,7 +13,7 @@ public class CrateBuns : MonoBehaviour, IInteractable
 
     private int count = 0;
 
-    void Start()
+    void Awake()
     {
         robot = robotPrefab.GetComponent<RobotController>();
         animator = robotPrefab.GetComponent<Animator>();

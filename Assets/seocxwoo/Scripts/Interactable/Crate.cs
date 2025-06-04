@@ -10,7 +10,7 @@ public class Crate : MonoBehaviour, IInteractable
     private Animator animator;
     private Transform hand;
 
-    void Start()
+    void Awake()
     {
         robot = robotPrefab.GetComponent<RobotController>();
         animator = robotPrefab.GetComponent<Animator>();

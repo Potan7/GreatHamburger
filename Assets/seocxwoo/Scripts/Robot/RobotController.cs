@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 
 public class RobotController : MonoBehaviour
@@ -76,8 +77,15 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)
@@ -91,7 +99,6 @@ public class RobotController : MonoBehaviour
         // 로봇이 이동 후 상호작용하도록 구성
         yield return StartCoroutine(MoveToNode(name));
         robotInteraction.Interact();
-        //robotInteraction.PlayAnim(name);
     }
 
     private IEnumerator MoveToNode(string name)
@@ -101,11 +108,9 @@ public class RobotController : MonoBehaviour
 
         // 로봇 출발 위치(그리드) 지정
         startPoint = ChangePosToPoint(transform.position);
-        Debug.Log(startPoint);
 
         // 목적지 위치(그리드) 지정
         destPoint = ChangeDestPoint(destination);
-        Debug.Log(destPoint);
 
         // 경로 탐색
         pathList = AStarPathfinder.GetPathList(grid, width, height, startPoint, destPoint);
@@ -123,8 +128,6 @@ public class RobotController : MonoBehaviour
 
     private Vector2Int ChangeDestPoint(Transform trans)
     {
-        Debug.Log(trans);
-
         // 목적지 위치(그리드) 지정
         Vector2Int point = ChangePosToPoint(trans.position);
 

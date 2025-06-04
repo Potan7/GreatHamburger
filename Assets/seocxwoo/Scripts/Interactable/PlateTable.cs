@@ -11,7 +11,7 @@ public class PlateTable : MonoBehaviour, IInteractable
 
     private float offset = 0f;
 
-    void Start()
+    void Awake()
     {
         robot = robotPrefab.GetComponent<RobotController>();
         animator = robotPrefab.GetComponent<Animator>();

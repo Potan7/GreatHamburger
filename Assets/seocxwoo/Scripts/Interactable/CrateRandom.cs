@@ -14,7 +14,7 @@ public class CrateRandom : MonoBehaviour, IInteractable
     private int count = 0;
     private int prevIndex = -1;
 
-    void Start()
+    void Awake()
     {
         robot = robotPrefab.GetComponent<RobotController>();
         animator = robotPrefab.GetComponent<Animator>();
