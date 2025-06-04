@@ -18,6 +18,19 @@ namespace MapObject
         void Start()
         {
             SpawnItem().Forget();
+
+            if (mapObject == null)
+            {
+                if (transform.parent != null)
+                {
+                    mapObject = transform.parent;
+                }
+                else
+                {
+                    Debug.LogWarning("MapObject not set for ItemSpawner. Using self as mapObject.");
+                    mapObject = transform;
+                }
+            }
         }
 
         protected void IngredientSelected(PlayerIngredient ingredient)
