@@ -9,11 +9,35 @@ EditorBuildSettings:
     path: Assets/Scenes/Mainmenu.unity
     guid: 2d2906c6060f32540a802e22d69fe445
   - enabled: 1
-    path: Assets/Scenes/Stage/TestStage.unity
-    guid: 5823f534fe48ea045b37e03eb88094fb
+    path: Assets/Scenes/Stage/Stage1-1.unity
+    guid: 510a6f7b42fc88f43b79f59f6120d747
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 55daccc09a3b69647bbab145b54a3ab3
+    path: Assets/Scenes/Stage/Stage2-1.unity
+    guid: f391bd4f8ec6b4f42bb3558be7a657f1
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage3-1.unity
+    guid: d657ff670be01bb4ab0af18d24481474
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage4-1.unity
+    guid: 4410915332a3db845a0480e3f0c4ad79
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage5-1.unity
+    guid: 556a82bb1a897f041a3cd98548ad3e41
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage6-1.unity
+    guid: dd4c9589b6c3cc8489541678f384daf3
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage7-1.unity
+    guid: f1a37d11e9bbcf546a6d6403f8dd713f
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage8-1.unity
+    guid: 595bf37b85817664b9856236458f588a
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage9-1.unity
+    guid: 26beb6903ac5d0443a52c699a200c941
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage10-1.unity
+    guid: 5543b56889220684b93f5c0817b4268a
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}
