@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ingredientName: burger_cooked
   height: 0.2
+  index: 2

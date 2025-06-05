@@ -13,4 +13,9 @@ public class Ingredient : MonoBehaviour
     {
         return data.height;
     }
+
+    public float GetIndex()
+    {
+        return data.index;
+    }
 }

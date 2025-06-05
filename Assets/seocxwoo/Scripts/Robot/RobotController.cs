@@ -80,16 +80,33 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        for (int i = 0; i < 2; i++)
+        {
+            yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        }
+
+        GameManager.instance.CheckResult();
+
+        Time.timeScale = 20;
 
         for (int i = 0; i < 5; i++)
         {
-            yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
-            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+            GameManager.instance.CleanPlate();
+            for (int j = 0; j < 2; j++)
+            {
+                yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+                yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+            }
+            GameManager.instance.CheckResult();
         }
+
+        Time.timeScale = 1;
     }
 
     private IEnumerator MoveToNodeAndInteract(string name)

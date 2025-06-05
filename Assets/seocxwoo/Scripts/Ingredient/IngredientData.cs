@@ -5,4 +5,5 @@ public class IngredientData : ScriptableObject
 {
     public string ingredientName;
     public float height;
+    public int index;
 }
