@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using static UnityEditor.Recorder.OutputPath;
 
 public class RobotController : MonoBehaviour
 {
@@ -26,7 +27,13 @@ public class RobotController : MonoBehaviour
     private RobotInteraction robotInteraction;
     [SerializeField] private InteractableRegistry interactableRegistry;
 
+    private Transform hand;
     private bool isBusy = false;
+
+    void Awake()
+    {
+        hand = transform.Find("Hand");
+    }
 
     void Start()
     {
@@ -85,6 +92,11 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
+        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        Debug.Log(WhatIsInHand());
+        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+
         for (int i = 0; i < 2; i++)
         {
             yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
@@ -120,6 +132,12 @@ public class RobotController : MonoBehaviour
         // 로봇이 이동 후 상호작용하도록 구성
         yield return StartCoroutine(MoveToNode(name));
         robotInteraction.Interact();
+
+        // 추가한 내용 (안정성 미검증)
+        while (isBusy)
+        {
+            yield return null;
+        }
     }
 
     private IEnumerator MoveToNode(string name)
@@ -172,5 +190,18 @@ public class RobotController : MonoBehaviour
     public void SetBusy(bool boolean)
     {
         isBusy = boolean;
+    }
+
+    public int WhatIsInHand()
+    {
+        int itemIndex;
+
+        if (hand.childCount == 0)
+        {
+            return -1;
+        }
+
+        itemIndex = hand.GetChild(0).gameObject.GetComponent<Ingredient>().GetIndex();
+        return itemIndex;
     }
 }

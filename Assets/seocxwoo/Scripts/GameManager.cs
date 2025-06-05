@@ -5,9 +5,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // 전체를 인자로 받고 offset값 초기화 같이 해줘야함
-    [SerializeField] private Transform plate;
+    [SerializeField] private GameObject table;
     [SerializeField] private HamburgerData data;
     private List<int> recipe = new List<int>();
+    private Transform plate;
 
     public static GameManager instance = null;
 
