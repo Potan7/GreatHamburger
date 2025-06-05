@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 393b66a16d611614ebd43deef48f8ef7, type: 3}
-  m_Name: Burger_uncooked
+  m_Script: {fileID: 11500000, guid: a10f1abb8d9411646bac0c908b4adbe2, type: 3}
+  m_Name: Stage6_2
   m_EditorClassIdentifier: 
-  ingredientName: burger_uncooked
-  height: 0.2
+  ingredientList: 00000000070000000900000001000000

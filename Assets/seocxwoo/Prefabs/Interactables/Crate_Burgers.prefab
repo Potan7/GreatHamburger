@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7600473131455f46ae7cdda494f0c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  robotPrefab: {fileID: 0}
   ingredientPrefab: {fileID: 5961164521891900213, guid: 908114ae23bcc5b4d927bfe26a0c0c46, type: 3}
 --- !u!1001 &248651648339597366
 PrefabInstance:

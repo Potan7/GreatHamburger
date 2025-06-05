@@ -1,51 +1,89 @@
-using NUnit.Framework;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Oven : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject cookedBurger;
+    [SerializeField] private GameObject robotPrefab;
+    [SerializeField] private GameObject ingredientPrefab;
 
-    public void Interact(GameObject interactor)
+    private RobotController robot;
+    private Animator animator;
+    private Transform hand;
+
+    void Awake()
     {
-        Debug.Log("Robot과 Oven Interact 시도");
+        robot = robotPrefab.GetComponent<RobotController>();
+        animator = robotPrefab.GetComponent<Animator>();
+        hand = robotPrefab.transform.Find("Hand");
+    }
 
-        RobotController controller = interactor.GetComponent<RobotController>();
-        Transform hand = interactor.transform.Find("Hand");
+    public IEnumerator Interact()
+    {
+        Debug.Log("Robot Interact with Oven.");
 
-        if (hand == null)
-        {
-            Debug.LogWarning("Hand transform not found on interactor.");
-            return;
-        }
-
+        // Hand에 내려놓을 아이템이 없음 (에러 발생)
         if (hand.childCount == 0)
         {
-            Debug.Log("Robot has no item. okay");
+            Debug.LogWarning("Robot has no item.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
+            animator.SetTrigger("Error");
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
         }
 
-        if (hand.childCount > 0)
+        GameObject item = hand.GetChild(0).gameObject;
+
+        // Oven에 내려놓을 아이템이 적합하지 않음 (에러 발생)
+        if (!IsSuitable(item.name))
         {
-            GameObject item = hand.GetChild(0).gameObject;
-            Destroy(item);
+            Debug.LogWarning("Item is not suitable.");
+
+            // 에러 애니메이션 실행 후 종료
+            robot.SetBusy(true);
+            animator.SetTrigger("Error");
+            yield return new WaitForSeconds(1.0f);
+            robot.SetBusy(false);
+
+            yield break;
+        }
+
+        Destroy(item);
+
+        // Oven에 패티 내려놓기->기다리기->줍기
+        robot.SetBusy(true);
+        animator.SetInteger("NextAction", 2);
+        animator.SetTrigger("PutDown");
+        yield return new WaitForSeconds(2.0f);
+        animator.SetTrigger("PickUp");
+        yield return new WaitForSeconds(1.0f);
+        item = Instantiate(ingredientPrefab, hand);
+        item.transform.localPosition = Vector3.zero;
+        item.transform.localRotation = Quaternion.identity;
+        robot.SetBusy(false);
+    }
+
+    private bool IsSuitable(string name)
+    {
+        if (name == "food_ingredient_burger_uncooked(Clone)")
+        {
+            return true;
         }
         else
         {
-            GameObject item = Instantiate(cookedBurger);
-            item.transform.parent = hand;
-            item.transform.localPosition = Vector3.zero;
-            item.transform.localRotation = Quaternion.identity;
-
-            Debug.Log($"{interactor.name} picked up {item.name}");
-            controller.SetBusy(false);
+            return false;
         }
     }
 
-    public void WaitForBurger(GameObject interactor)
+    private void OnDrawGizmos()
     {
-        Debug.Log("wait is working");
-
-        Animator animator = interactor.GetComponent<Animator>();
-        animator.SetBool("NeedTime", false);
+        Gizmos.color = Color.red;
+        Vector3 localOffset = new Vector3(0f, 0f, 1f);
+        Vector3 worldOffset = transform.rotation * localOffset;
+        Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
+        Gizmos.DrawSphere(pos, 0.1f);
     }
 }

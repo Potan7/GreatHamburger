@@ -121,4 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7600473131455f46ae7cdda494f0c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ingredientPrefab: {fileID: 2964785167147907535, guid: 724249f93be950e43a4ff1b33a05b037, type: 3}
+  robotPrefab: {fileID: 0}
+  ingredientPrefab: {fileID: 2354832468737919606, guid: 98c056cfd87c74942ba07ed886b7e548, type: 3}

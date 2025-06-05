@@ -208,4 +208,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f591cc53a19f87a478ec6e13b20cde5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cookedBurger: {fileID: 40002245809050480, guid: a36c6860c1f7a4a42bb973ee34edffea, type: 3}
+  robotPrefab: {fileID: 0}
+  ingredientPrefab: {fileID: 40002245809050480, guid: a36c6860c1f7a4a42bb973ee34edffea, type: 3}
