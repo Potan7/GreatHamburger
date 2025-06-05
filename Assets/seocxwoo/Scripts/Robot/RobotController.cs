@@ -80,6 +80,11 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
 
+        yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
         for (int i = 0; i < 5; i++)
         {
             yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
