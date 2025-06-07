@@ -1,11 +1,14 @@
 using Data;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
+using static Audio.AudioManager;
 
 namespace Audio
 {
     public class AudioManager : MonoBehaviour
     {
+        
         #region Singleton And Constructor
         static AudioManager instance;
         public static AudioManager Instance
@@ -20,7 +23,7 @@ namespace Audio
                 return instance;
             }
         }
-
+        SoundBank soundBank;
         void InitSoundManager()
         {
             Debug.Log("SoundManager Initialized"); // 사운드 매니저 초기화 로그 출력
@@ -30,6 +33,8 @@ namespace Audio
             SetAudioMute(!DataManager.Instance.IsMasterVolumeOn, SoundType.Master); // 마스터 음소거 설정
             SetAudioMute(!DataManager.Instance.IsSFXVolumeOn, SoundType.SFX); // SFX 음소거 설정
             SetAudioMute(!DataManager.Instance.IsBGMVolumeOn, SoundType.BGM); // BGM 음소거 설정
+
+            soundBank = Resources.Load<SoundBank>("SoundBankObject");
         }
 
         void Start()
@@ -118,5 +123,28 @@ namespace Audio
             }
         }
 
+        /// <summary>
+        /// 효과음 생성 및 해체
+        /// </summary>
+        /// <param name="sound"></param>
+        /// <param name="position"></param>
+        public static void MakeSoundEffent(ESoundEffect sound, Vector3 position)
+        {
+            AudioSource audioUnit = new GameObject().AddComponent<AudioSource>();
+            audioUnit.clip = Instance.soundBank.GetAudioClip(sound);
+            if(Instance.audioMixer.GetFloat((SoundType.SFX).ToString(), out float volume)) audioUnit.volume = volume;
+            audioUnit.Play();
+            Destroy(audioUnit.gameObject, audioUnit.clip.length);
+        }
+
     }
+}
+
+public enum ESoundEffect
+{
+    Cutting_Board,
+    Pop,
+    Cooking,
+    Appear,
+    Denied
 }
