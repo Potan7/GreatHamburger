@@ -40,6 +40,9 @@ namespace MapObject
             SpawnItem().Forget();
         }
 
+        [ContextMenu("Spawn Item Now")]
+        public void SpawnItemNow() => SpawnItem().Forget();
+
         public virtual async UniTaskVoid SpawnItem()
         {
             await UniTask.Delay(spawnInterval * 1000);

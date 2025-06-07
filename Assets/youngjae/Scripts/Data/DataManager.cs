@@ -39,6 +39,7 @@ namespace Data
         #endregion
 
         public const int STAGE_COUNT = 10; // 스테이지 개수
+        public int notStageCount = 1; // 앞부분에 스테이지가 아닌 개수 (1: 메인메뉴)
         public const string SAVEFILE_NAME = "data.json"; // 저장 파일 이름
         public string savefilePath;
 
@@ -96,6 +97,19 @@ namespace Data
         #endregion
 
         #region DataContainer Load/Save
+
+        public void ClearStage(int stageBuildIndex)
+        {
+            if (stageBuildIndex < notStageCount || stageBuildIndex >= STAGE_COUNT + notStageCount)
+            {
+                Debug.LogError("Invalid stage index: " + stageBuildIndex);
+                return;
+            }
+
+            int stageIndex = stageBuildIndex - notStageCount; // 스테이지 인덱스 계산
+            CurrentDataContainer.StageClear[stageIndex] = true; // 해당 스테이지 클리어 상태 업데이트
+            SaveDataContainer(); // 데이터 저장
+        }
 
         /// <summary>
         /// 데이터 컨테이너를 로드합니다.

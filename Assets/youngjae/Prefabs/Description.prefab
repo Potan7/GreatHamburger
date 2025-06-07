@@ -249,7 +249,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "\uD1A0\uB9C8\uD1A0\uC640 \uC591\uC0C1\uCD94\uAC00 \uB098\uC624\uB294 \uCC3D\uACE0\uAC00
+    \uC788\uC2B5\uB2C8\uB2E4 \\n\uD558\uC9C0\uB9CC \uBE75\uACFC \uB2EC\uB9AC \uD1A0\uB9C8\uD1A0\uC640
+    \uC591\uC0C1\uCD94\uB294 \uCE7C\uB85C \uC798\uB77C\uC57C \uD569\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e61baa4617a917043a47f57848f4c72e, type: 2}
   m_sharedMaterial: {fileID: -5072250210468533663, guid: e61baa4617a917043a47f57848f4c72e, type: 2}
@@ -308,7 +310,7 @@ MonoBehaviour:
   m_isCullingEnabled: 0
   m_horizontalMapping: 0
   m_verticalMapping: 0
-  m_uvLineOffset: 0
+  m_uvLineOffset: 3
   m_geometrySortingOrder: 0
   m_IsTextObjectScaleStatic: 0
   m_VertexBufferAutoSizeReduction: 0

@@ -21,9 +21,15 @@ namespace MapObject
 
         public event Action OnDoorClosed;
 
+        int defaultLayer;
+        int toolLayer;
+
 
         void Start()
         {
+            defaultLayer = LayerMask.NameToLayer("Default");
+            toolLayer = LayerMask.NameToLayer("Tool");
+
             ovenDoor.selectEntered.AddListener(OnGrabbingOvenDoor);
             ovenDoor.selectExited.AddListener(OnReleasingOvenDoor);
             ovenDoorCollider = ovenDoor.GetComponent<Collider>();
@@ -51,6 +57,11 @@ namespace MapObject
                 // Debug.Log("Oven door closed");
                 isOvenDoorOpen = false;
                 OnDoorClosed?.Invoke();
+                ovenDoor.gameObject.layer = defaultLayer;
+            }
+            else
+            {
+                ovenDoor.gameObject.layer = toolLayer;
             }
             isGrabbed = false;
         }
@@ -73,6 +84,7 @@ namespace MapObject
 
             ovenDoor.enabled = false;
             ovenHingeJoint.useSpring = true;
+            ovenDoor.gameObject.layer = defaultLayer;
         }
 
         public async void CloseDoor()
@@ -90,12 +102,14 @@ namespace MapObject
             ovenDoor.enabled = true;
             isOvenDoorOpen = false;
             OnDoorClosed?.Invoke();
+            ovenDoor.gameObject.layer = defaultLayer;
         }
 
         public void OpenDoor()
         {
             ovenHingeJoint.useSpring = false;
             ovenDoor.enabled = true;
+            ovenDoor.gameObject.layer = toolLayer;
         }
     }
 }
