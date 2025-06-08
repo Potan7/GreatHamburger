@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Audio;
 using Cysharp.Threading.Tasks;
 using Data;
 using MapObject;
@@ -27,6 +28,8 @@ public class PlayerMapManager : MonoBehaviour
         {
             Destroy(gameObject); // 이미 존재하는 경우 중복 객체 파괴
         }
+
+        AudioManager.PlayRandomBGMSound(EBGMGroup.GamePlay);
     }
 
     public void CheckAnswer(List<PlayerIngredient> addedItemList)

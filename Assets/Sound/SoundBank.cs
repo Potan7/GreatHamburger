@@ -25,7 +25,7 @@ public class SoundBank : ScriptableObject
             case ESoundEffect.Denied:
                 return denied;
             default:
-                Debug.LogError("»ç¿îµå Ãß°¡ ¿À·ù");
+                Debug.LogError("ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½");
                 return null;
         }
     }
