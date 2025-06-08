@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Audio;
 using Cysharp.Threading.Tasks;
+using Data;
 using MapObject;
 using MapObject.Ingredients;
 using UnityEngine;
@@ -26,6 +28,8 @@ public class PlayerMapManager : MonoBehaviour
         {
             Destroy(gameObject); // 이미 존재하는 경우 중복 객체 파괴
         }
+
+        AudioManager.PlayRandomBGMSound(EBGMGroup.GamePlay);
     }
 
     public void CheckAnswer(List<PlayerIngredient> addedItemList)
@@ -44,10 +48,12 @@ public class PlayerMapManager : MonoBehaviour
         PlateSuccess();
     }
 
-    void PlateSuccess()
+    public void PlateSuccess()
     {
         answerCheckMark.SetActive(true);
         exitDoor.OpenDoor();
+
+        DataManager.Instance.ClearStage(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnAddedItemToPlate(List<PlayerIngredient> addedItemList)
@@ -80,5 +86,13 @@ public class PlayerMapManager : MonoBehaviour
         });
         await tcs.Task;
         scene.allowSceneActivation = true;
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null; // 싱글톤 인스턴스 해제
+        }
     }
 }

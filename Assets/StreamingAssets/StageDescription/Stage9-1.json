@@ -1,0 +1,16 @@
+{
+    "title": "두개의 랜덤 상자",
+    "descriptions": [
+        {
+            "text": "안녕하세요! \n스테이지 9-1에 오신 것을 환영합니다."
+        },
+        {
+            "text": "이번에는 두개의 상자에서 재료가 랜덤하게 나옵니다.",
+            "imagePath": "StageImages/Stage9-1/1"
+        },
+        {
+            "text": "하나는 양상추 또는 고기 패티가 나오고 다른 하나는 토마토 또는 고기 패티가 나옵니다.",
+            "imagePath": "StageImages/Stage9-1/1"
+        }
+    ]
+}

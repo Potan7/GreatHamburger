@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Audio;
 using DG.Tweening;
 using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
@@ -59,6 +60,8 @@ public class PlayerManager : MonoBehaviour
 
     public void FadeIn(Action onComplete = null)
     {
+        AudioManager.StopBGMSound();
+
         canvas.SetActive(true);
         fadeImage.color = Color.clear;
         fadeImage.DOFade(1, 1.5f).OnComplete(() =>

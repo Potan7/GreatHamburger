@@ -1,0 +1,16 @@
+{
+    "title": "치즈",
+    "descriptions": [
+        {
+            "text": "안녕하세요! \n스테이지 4-1에 오신 것을 환영합니다."
+        },
+        {
+            "text": "이번 햄버거에는 마지막 신규 재료 치즈가 들어갑니다.",
+            "imagePath": "StageImages/Stage4-1/1"
+        },
+        {
+            "text": "치즈는 빵처럼 창고에서 꺼내서 접시에 올리면 됩니다.",
+            "imagePath": "StageImages/Stage4-1/2"
+        }
+    ]
+}

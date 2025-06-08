@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Audio;
 using Cysharp.Threading.Tasks;
 using Data;
 using MapObject.Ingredients;
@@ -65,6 +66,7 @@ namespace MapObject
             oven.ForceCloseOvenDoor();
             await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
 
+            AudioManager.MakeSoundEffect(ESoundEffect.Cooking, transform.position);
             progressBar.gameObject.SetActive(true);
             float time = 0;
             while (time < cookingTime)

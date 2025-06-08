@@ -49,7 +49,7 @@ namespace MainMenu
             stageSelectPanelSizeDelta = stageSelectionPanel.sizeDelta; // 초기 크기 저장
 
             stageSelectionPanel.sizeDelta = new Vector2(0, stageSelectPanelSizeDelta.y);
-            stageSelectionPanel.gameObject.SetActive(false); 
+            stageSelectionPanel.gameObject.SetActive(false);
 
             // SettingPanel 초기화
             settingPanelInitialXPos = settingPanel.localPosition.x; // 초기 X 위치 저장
@@ -75,6 +75,9 @@ namespace MainMenu
             }
             LayoutRebuilder.ForceRebuildLayoutImmediate(stageContectScrollRect.content); // 레이아웃 강제 재구성
             stageContectScrollRect.normalizedPosition = new Vector2(0.5f, 1); // 스크롤 위치 초기화
+
+            var instance = AudioManager.Instance;
+            AudioManager.PlayRandomBGMSound(EBGMGroup.MainMenu);
         }
 
         private void SetSequence()

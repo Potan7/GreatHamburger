@@ -1,13 +1,16 @@
 using Data;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Rendering;
+using static Audio.AudioManager;
 
 namespace Audio
 {
     public class AudioManager : MonoBehaviour
     {
+
         #region Singleton And Constructor
-        static AudioManager instance;
+        static AudioManager instance = null;
         public static AudioManager Instance
         {
             get
@@ -20,7 +23,7 @@ namespace Audio
                 return instance;
             }
         }
-
+        SoundBank soundBank;
         void InitSoundManager()
         {
             Debug.Log("SoundManager Initialized"); // 사운드 매니저 초기화 로그 출력
@@ -30,11 +33,18 @@ namespace Audio
             SetAudioMute(!DataManager.Instance.IsMasterVolumeOn, SoundType.Master); // 마스터 음소거 설정
             SetAudioMute(!DataManager.Instance.IsSFXVolumeOn, SoundType.SFX); // SFX 음소거 설정
             SetAudioMute(!DataManager.Instance.IsBGMVolumeOn, SoundType.BGM); // BGM 음소거 설정
+
+            soundBank = Resources.Load<SoundBank>("SoundBankObject");
         }
 
-        void Start()
+        void Awake()
         {
-            if (instance != this)
+            if (instance == null || instance == this)
+            {
+                instance = this; 
+                DontDestroyOnLoad(gameObject);
+            }
+            else
             {
                 Destroy(gameObject);
             }
@@ -50,6 +60,8 @@ namespace Audio
         }
 
         public AudioMixer audioMixer; // 오디오 믹서
+        public AudioMixerGroup sfxGroup;
+        public AudioSource bgmSource; // BGM 소스
 
         /// <summary>
         /// 오디오 믹서의 볼륨을 설정합니다.
@@ -86,7 +98,7 @@ namespace Audio
             SetAudioVolume(DataManager.Instance.MasterVolume, SoundType.Master); // 마스터 볼륨 설정
             SetAudioVolume(DataManager.Instance.SFXVolume, SoundType.SFX); // SFX 볼륨 설정
             SetAudioVolume(DataManager.Instance.BGMVolume, SoundType.BGM); // BGM 볼륨 설정
-        }   
+        }
 
         /// <summary>
         /// 오디오 믹서의 음소거를 설정합니다.
@@ -118,5 +130,65 @@ namespace Audio
             }
         }
 
+        /// <summary>
+        /// 효과음 생성 및 해체
+        /// </summary>
+        /// <param name="sound"></param>
+        /// <param name="position"></param>
+        public static void MakeSoundEffect(ESoundEffect sound, Vector3 position)
+        {
+            AudioSource audioUnit = new GameObject().AddComponent<AudioSource>();
+            audioUnit.transform.position = position; // 오디오 소스의 위치 설정
+            audioUnit.spatialBlend = 1f; // 3D 사운드로 설정
+            audioUnit.outputAudioMixerGroup = Instance.sfxGroup; // SFX 오디오 믹서 그룹 설정
+
+            audioUnit.clip = Instance.soundBank.GetAudioClip(sound);
+            // if (Instance.audioMixer.GetFloat((SoundType.SFX).ToString(), out float volume)) audioUnit.volume = volume;
+            audioUnit.Play();
+            Destroy(audioUnit.gameObject, audioUnit.clip.length);
+        }
+
+        public static void PlayRandomBGMSound(EBGMGroup bgmGroup)
+        {
+            Debug.Log($"Playing BGM from group: {bgmGroup}");
+            BGMBank load = Resources.Load<BGMBank>(bgmGroup.ToString());
+            if (load == null)
+            {
+                Debug.LogError($"BGM Group '{bgmGroup}' not found in Resources.");
+                return;
+            }
+
+            AudioClip audioClip = load.GetRandomBGMClip();
+            Instance.bgmSource.clip = audioClip; // BGM 소스에 오디오 클립 설정
+            Instance.bgmSource.Play();
+        }
+        public static void StopBGMSound()
+        {
+            if (Instance.bgmSource.isPlaying)
+            {
+                Instance.bgmSource.Stop(); // BGM 소스 정지
+            }
+        }
+
+        void OnDestroy()
+        {
+            instance = null;
+        }
+
     }
+}
+
+public enum ESoundEffect
+{
+    Cutting_Board,
+    Pop,
+    Cooking,
+    Appear,
+    Denied
+}
+
+public enum EBGMGroup
+{
+    MainMenu,
+    GamePlay
 }

@@ -1,0 +1,20 @@
+{
+    "title": "랜덤 박스",
+    "descriptions": [
+        {
+            "text": "안녕하세요! \n스테이지 7-1에 오신 것을 환영합니다."
+        },
+        {
+            "text": "이번에는 좀 특별한 창고가 등장합니다.",
+            "imagePath": "StageImages/Stage7-1/1"
+        },
+        {
+            "text": "이 창고에서는 재료가 랜덤하게 등징합니다.\n그래서 재료를 꺼낼 때마다 다른 재료가 나올 수 있습니다.",
+            "imagePath": "StageImages/Stage7-1/1"
+        },
+        {
+            "text": "이번에는 토마토와 양상추 중 하나가 랜덤하게 나올 것입니다.\n어떤 재료가 나올지 기대해보세요!",
+            "imagePath": "StageImages/Stage7-1/1"
+        }
+    ]
+}
