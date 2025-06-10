@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Audio;
 using DG.Tweening;
 using MapObject.Ingredients;
 using Unity.XR.CoreUtils;
@@ -12,7 +14,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
 
-    public PlayerIngredient selectIngredient = null;
+    public HashSet<PlayerIngredient> selectedIngredients = new HashSet<PlayerIngredient>();
 
     public Image fadeImage;
     public GameObject canvas;
@@ -58,6 +60,8 @@ public class PlayerManager : MonoBehaviour
 
     public void FadeIn(Action onComplete = null)
     {
+        AudioManager.StopBGMSound();
+
         canvas.SetActive(true);
         fadeImage.color = Color.clear;
         fadeImage.DOFade(1, 1.5f).OnComplete(() =>
@@ -71,4 +75,46 @@ public class PlayerManager : MonoBehaviour
     {
         inputAction.performed -= OnMenuInput;
     }
+
+    #region Player Ingredients Management
+
+    public void ItemSelected(PlayerIngredient ingredient)
+    {
+        // Debug.Log("Selected: " + ingredient.name);
+        selectedIngredients.Add(ingredient);
+    }
+
+    public void ItemDeselected(PlayerIngredient ingredient)
+    {
+        // Debug.Log("Deselected: " + ingredient.name);
+        selectedIngredients.Remove(ingredient);
+    }
+
+    public int GetSelectedIngredientCount()
+    {
+        return selectedIngredients.Count;
+    }
+
+    public PlayerIngredient GetFirstSelectedIngredientWithItemDeselect(bool deselectOther = false)
+    {
+        if (selectedIngredients.Count == 0)
+            return null;
+
+        PlayerIngredient ingredient = selectedIngredients.First();
+        ingredient.CancelSelection();
+        selectedIngredients.Remove(ingredient);
+
+        if (deselectOther)
+        {
+            var selectedIngredientsCopy = new HashSet<PlayerIngredient>(selectedIngredients);
+            foreach (var item in selectedIngredientsCopy)
+            {
+                item.CancelSelection();
+            }
+            selectedIngredients.Clear();
+        }
+
+        return ingredient;
+    }
+    #endregion
 }

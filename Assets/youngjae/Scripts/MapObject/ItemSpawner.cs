@@ -1,33 +1,57 @@
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using MapObject.Ingredients;
 using UnityEngine;
 
 namespace MapObject
 {
     public class ItemSpawner : MonoBehaviour
     {
-        public List<GameObject> itemList;
+        [Tooltip("스폰될 아이템 목록 (순서대로 스폰됨)")]
+        public List<PlayerIngredient> itemList;
 
         public Transform mapObject;
 
         public int currentItemIndex = 0;
+        public int spawnInterval = 3; // 스폰 간격 (초 단위)
 
         void Start()
         {
-            SpawnItem();
+            SpawnItem().Forget();
+
+            if (mapObject == null)
+            {
+                if (transform.parent != null)
+                {
+                    mapObject = transform.parent;
+                }
+                else
+                {
+                    Debug.LogWarning("MapObject not set for ItemSpawner. Using self as mapObject.");
+                    mapObject = transform;
+                }
+            }
         }
 
-        public bool SpawnItem()
+        protected void IngredientSelected(PlayerIngredient ingredient)
         {
-            if (currentItemIndex >= itemList.Count)
-            {
-                return false;
-            }
+            // Debug.Log("Selected: " + ingredient.name);
+            ingredient.OnIngredientSelected -= IngredientSelected;
+            SpawnItem().Forget();
+        }
 
-            Instantiate(itemList[currentItemIndex], transform.position + Vector3.up * 0.3f, Quaternion.identity, mapObject);
-            // item.transform.SetParent(transform);
+        [ContextMenu("Spawn Item Now")]
+        public void SpawnItemNow() => SpawnItem().Forget();
+
+        public virtual async UniTaskVoid SpawnItem()
+        {
+            await UniTask.Delay(spawnInterval * 1000);
+
+            var ingredient = Instantiate(itemList[currentItemIndex], transform.position + Vector3.up * 0.3f, Quaternion.identity, mapObject);
+            ingredient.OnIngredientSelected += IngredientSelected;
 
             currentItemIndex++;
-            return true;
+            currentItemIndex %= itemList.Count;
         }
     }
 }

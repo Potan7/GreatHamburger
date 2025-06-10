@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using MapObject.Ingredients;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
@@ -73,6 +74,8 @@ namespace MapObject
 
                 ingredient.transform.localPosition = newLocalPosition;
                 // ingredient.SetLocalPositionAndRotation(newLocalPosition, targetLocalRotation); // 이렇게 사용해도 동일
+
+                FindAnyObjectByType<DescriptionPanel>().JobComplete(WaitJob.WaitForPlating);
             }
 
             stackedIngredients.Add(ingredient);

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
+using static UnityEditor.Recorder.OutputPath;
 
 public class RobotController : MonoBehaviour
 {
@@ -25,7 +27,13 @@ public class RobotController : MonoBehaviour
     private RobotInteraction robotInteraction;
     [SerializeField] private InteractableRegistry interactableRegistry;
 
+    private Transform hand;
     private bool isBusy = false;
+
+    void Awake()
+    {
+        hand = transform.Find("Hand");
+    }
 
     void Start()
     {
@@ -55,24 +63,67 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Tomatoes"));
         //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate"));
-        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Burgers"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Cheese"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+
+        //yield return StartCoroutine(MoveToNodeAndInteract("Oven"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Random_A"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+
+        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        Debug.Log(WhatIsInHand());
+        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+
+        for (int i = 0; i < 2; i++)
+        {
+            yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        }
+
+        GameManager.instance.CheckResult();
+
+        Time.timeScale = 20;
+
+        for (int i = 0; i < 5; i++)
+        {
+            GameManager.instance.CleanPlate();
+            for (int j = 0; j < 2; j++)
+            {
+                yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+                yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+            }
+            GameManager.instance.CheckResult();
+        }
+
+        Time.timeScale = 1;
     }
 
     public IEnumerator MoveToNodeAndInteract(string name)
     {
-        // 로봇이 바쁘면 대기(애니메이션 등으로 인해)
+        // 로봇이 바쁘면 대기 (앞선 동작 수행 중)
         while (isBusy)
         {
             yield return null;
@@ -80,22 +131,27 @@ public class RobotController : MonoBehaviour
 
         // 로봇이 이동 후 상호작용하도록 구성
         yield return StartCoroutine(MoveToNode(name));
-        //robotInteraction.Interact();
-        robotInteraction.PlayAnim(name);
+        robotInteraction.Interact();
+
+        // 추가한 내용 (안정성 미검증)
+        while (isBusy)
+        {
+            yield return null;
+        }
     }
 
     private IEnumerator MoveToNode(string name)
     {
+        Debug.Log("Robot move to " + name + ".");
+
         // 목적지 정보 저장
         Transform destination = interactableRegistry.GetTransform(name);
 
         // 로봇 출발 위치(그리드) 지정
         startPoint = ChangePosToPoint(transform.position);
-        Debug.Log(startPoint);
 
         // 목적지 위치(그리드) 지정
         destPoint = ChangeDestPoint(destination);
-        Debug.Log(destPoint);
 
         // 경로 탐색
         pathList = AStarPathfinder.GetPathList(grid, width, height, startPoint, destPoint);
@@ -113,8 +169,6 @@ public class RobotController : MonoBehaviour
 
     private Vector2Int ChangeDestPoint(Transform trans)
     {
-        Debug.Log(trans);
-
         // 목적지 위치(그리드) 지정
         Vector2Int point = ChangePosToPoint(trans.position);
 
@@ -136,5 +190,18 @@ public class RobotController : MonoBehaviour
     public void SetBusy(bool boolean)
     {
         isBusy = boolean;
+    }
+
+    public int WhatIsInHand()
+    {
+        int itemIndex;
+
+        if (hand.childCount == 0)
+        {
+            return -1;
+        }
+
+        itemIndex = hand.GetChild(0).gameObject.GetComponent<Ingredient>().GetIndex();
+        return itemIndex;
     }
 }

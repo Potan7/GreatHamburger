@@ -21,9 +21,15 @@ namespace MapObject
 
         public event Action OnDoorClosed;
 
+        int defaultLayer;
+        int toolLayer;
+
 
         void Start()
         {
+            defaultLayer = LayerMask.NameToLayer("Default");
+            toolLayer = LayerMask.NameToLayer("Tool");
+
             ovenDoor.selectEntered.AddListener(OnGrabbingOvenDoor);
             ovenDoor.selectExited.AddListener(OnReleasingOvenDoor);
             ovenDoorCollider = ovenDoor.GetComponent<Collider>();
@@ -51,6 +57,13 @@ namespace MapObject
                 // Debug.Log("Oven door closed");
                 isOvenDoorOpen = false;
                 OnDoorClosed?.Invoke();
+                ovenHingeJoint.gameObject.layer = defaultLayer;
+                ovenDoor.gameObject.layer = defaultLayer;
+            }
+            else
+            {
+                ovenHingeJoint.gameObject.layer = toolLayer;
+                ovenDoor.gameObject.layer = toolLayer;
             }
             isGrabbed = false;
         }
@@ -61,6 +74,9 @@ namespace MapObject
             interactor = arg0.interactorObject as XRBaseInteractor;
             isGrabbed = true;
             isOvenDoorOpen = true;
+
+            ovenHingeJoint.gameObject.layer = toolLayer;
+            ovenDoor.gameObject.layer = toolLayer;
         }
 
         public void ForceCloseOvenDoor()
@@ -73,6 +89,8 @@ namespace MapObject
 
             ovenDoor.enabled = false;
             ovenHingeJoint.useSpring = true;
+            ovenHingeJoint.gameObject.layer = defaultLayer;
+            ovenDoor.gameObject.layer = defaultLayer;
         }
 
         public async void CloseDoor()
@@ -90,12 +108,16 @@ namespace MapObject
             ovenDoor.enabled = true;
             isOvenDoorOpen = false;
             OnDoorClosed?.Invoke();
+            ovenHingeJoint.gameObject.layer = defaultLayer;
+            ovenDoor.gameObject.layer = defaultLayer;
         }
 
         public void OpenDoor()
         {
             ovenHingeJoint.useSpring = false;
             ovenDoor.enabled = true;
+            ovenHingeJoint.gameObject.layer = toolLayer;
+            ovenDoor.gameObject.layer = toolLayer;
         }
     }
 }

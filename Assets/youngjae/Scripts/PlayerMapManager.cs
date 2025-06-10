@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Audio;
 using Cysharp.Threading.Tasks;
+using Data;
 using MapObject;
 using MapObject.Ingredients;
 using UnityEngine;
@@ -12,10 +14,7 @@ public class PlayerMapManager : MonoBehaviour
 
     public List<GameObject> answerList = new();
 
-    public ItemSpawner itemSpawner;
-
     public GameObject answerCheckMark;
-    public GameObject answerFailMark;
 
     public ExitDoor exitDoor;
 
@@ -29,45 +28,37 @@ public class PlayerMapManager : MonoBehaviour
         {
             Destroy(gameObject); // 이미 존재하는 경우 중복 객체 파괴
         }
+
+        AudioManager.PlayRandomBGMSound(EBGMGroup.GamePlay);
     }
 
     public void CheckAnswer(List<PlayerIngredient> addedItemList)
     {
         if (answerList.Count != addedItemList.Count)
         {
-            PlateFail();
             return;
         }
         for (int i = 0; i < answerList.Count; i++)
         {
             if (!addedItemList[i].name.Contains(answerList[i].name))
             {
-                PlateFail();
                 return;
             }
         }
         PlateSuccess();
     }
 
-    void PlateFail()
-    {
-        answerFailMark.SetActive(true);
-    }
-
-    void PlateSuccess()
+    public void PlateSuccess()
     {
         answerCheckMark.SetActive(true);
         exitDoor.OpenDoor();
+
+        DataManager.Instance.ClearStage(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void OnAddedItemToPlate(List<PlayerIngredient> addedItemList)
     {
-        bool isItemSpawned = itemSpawner.SpawnItem();
-
-        if (!isItemSpawned)
-        {
-            CheckAnswer(addedItemList);
-        }
+        CheckAnswer(addedItemList);
     }
 
     public async void RestartGame()
@@ -95,5 +86,13 @@ public class PlayerMapManager : MonoBehaviour
         });
         await tcs.Task;
         scene.allowSceneActivation = true;
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null; // 싱글톤 인스턴스 해제
+        }
     }
 }

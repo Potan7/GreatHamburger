@@ -1,81 +1,97 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Audio;
 using Cysharp.Threading.Tasks;
-using MapObject;
+using Data;
 using MapObject.Ingredients;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OvenInside : MonoBehaviour
+namespace MapObject
 {
-    public Oven oven;
-    public Transform ingredientPoint;
-    public Image progressBar;
 
-    public float cookingTime = 3f; // Time in seconds to cook the ingredient
-
-    bool isCooking = false;
-    PlayerIngredient ingredient;
-
-    void Start()
+    public class OvenInside : MonoBehaviour
     {
-        oven.OnDoorClosed += OnOvenClosed;
-    }
+        public Oven oven;
+        public Transform ingredientPoint;
+        public Image progressBar;
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (isCooking || !oven.isOvenDoorOpen)
-            return;
+        public float cookingTime = 3f; // Time in seconds to cook the ingredient
 
-        if (other.TryGetComponent(out PlayerIngredient insideIngredient))
+        // bool isCooking = false;
+        readonly HashSet<PlayerIngredient> ingredients = new HashSet<PlayerIngredient>();
+
+        void Start()
         {
-            ingredient = insideIngredient;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        if (ingredient != null && ingredient.gameObject == other.gameObject)
-        {
-            ingredient = null;
+            oven.OnDoorClosed += OnOvenClosed;
         }
 
-        if (isCooking)
+        void OnTriggerEnter(Collider other)
         {
-            isCooking = false;
-        }
-    }
-
-    public void OnOvenClosed()
-    {
-        if (ingredient == null)
-            return;
-
-        PutIngredientToOven().Forget();
-    }
-
-    async UniTask PutIngredientToOven()
-    {
-        ingredient.SetPosition(ingredientPoint.position);
-        isCooking = true;
-
-        oven.ForceCloseOvenDoor();
-        await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
-
-        progressBar.gameObject.SetActive(true);
-        float time = 0;
-        while (time < cookingTime)
-        {
-            time += Time.deltaTime;
-            progressBar.fillAmount = time / cookingTime;
-            await UniTask.Yield();
+            if (other.TryGetComponent(out PlayerIngredient insideIngredient))
+            {
+                ingredients.Add(insideIngredient);
+            }
         }
 
-        progressBar.gameObject.SetActive(false);
-        Debug.Log("Oven cooking done");
-        ingredient = ingredient.DoCooking();
+        void OnTriggerExit(Collider other)
+        {
+            if (other.TryGetComponent(out PlayerIngredient insideIngredient))
+            {
+                ingredients.Remove(insideIngredient);
+            }
 
-        ingredient.ReEnable();
+            // if (isCooking)
+            // {
+            //     isCooking = false;
+            // }
+        }
 
-        oven.OpenDoor();
+        public void OnOvenClosed()
+        {
+            if (ingredients.Count == 0)
+                return;
+
+            PutIngredientToOven().Forget();
+        }
+
+        async UniTask PutIngredientToOven()
+        {
+            // isCooking = true;
+            foreach (var ingredient in ingredients)
+            {
+                ingredient.SetInteractable(false);
+            }
+
+            oven.ForceCloseOvenDoor();
+            await UniTask.WaitWhile(() => oven.ovenHingeJoint.angle > 15);
+
+            AudioManager.MakeSoundEffect(ESoundEffect.Cooking, transform.position);
+            progressBar.gameObject.SetActive(true);
+            float time = 0;
+            while (time < cookingTime)
+            {
+                time += Time.deltaTime;
+                progressBar.fillAmount = time / cookingTime;
+                await UniTask.Yield();
+            }
+
+            progressBar.gameObject.SetActive(false);
+            Debug.Log("Oven cooking done");
+
+            var ingredientsCopy = new List<PlayerIngredient>(ingredients);
+
+            foreach (var ingredient in ingredientsCopy)
+            {
+                ingredients.Remove(ingredient);
+                var cookedIngredient = ingredient.DoCooking();
+                ingredients.Add(cookedIngredient);
+                cookedIngredient.SetInteractable(true);
+            }
+
+            FindAnyObjectByType<DescriptionPanel>().JobComplete(WaitJob.WaitForCooking);
+
+            oven.OpenDoor();
+        }
     }
 }

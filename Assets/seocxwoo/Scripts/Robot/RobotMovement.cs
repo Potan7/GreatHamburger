@@ -62,7 +62,7 @@ public class RobotMovement : MonoBehaviour
 
     private IEnumerator MoveForward(Vector3 destPos)
     {
-        while (Vector3.Distance(transform.position, destPos) > 0.01f)
+        while (Vector3.Distance(transform.position, destPos) > 0.05f)
         {
             transform.position = Vector3.MoveTowards(transform.position, destPos, moveSpeed * Time.deltaTime);
             yield return null;

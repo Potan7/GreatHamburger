@@ -65,6 +65,10 @@ PrefabInstance:
       value: bun_bottom
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: eaa972cb04a04814bb911df4a3ee1207, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eaa972cb04a04814bb911df4a3ee1207, type: 3}
       propertyPath: m_TagString
       value: Ingredient
       objectReference: {fileID: 0}
@@ -273,6 +277,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54497d24f4b48a944913453bcd6fb1c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: {fileID: 0}
-  rb: {fileID: 0}
-  collider: {fileID: 0}

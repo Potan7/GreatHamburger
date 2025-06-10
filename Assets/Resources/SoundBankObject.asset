@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 953f75e9a35f7394eaba6e64a2103280, type: 3}
+  m_Name: SoundBankObject
+  m_EditorClassIdentifier: 
+  cuttingBoad: {fileID: 8300000, guid: 0597aa6f613ec434b8e7cda9264d58f0, type: 3}
+  cooking: {fileID: 8300000, guid: 6ee47497b7b432346bf107f123e5cbee, type: 3}
+  appear: {fileID: 8300000, guid: 84d5a0aa713f1b947b642b877a2800f8, type: 3}
+  pop: {fileID: 8300000, guid: 946443e8cac24dc40909847a5f176051, type: 3}
+  denied: {fileID: 8300000, guid: 44f8d5059a1a51c40904104c8159dce2, type: 3}
