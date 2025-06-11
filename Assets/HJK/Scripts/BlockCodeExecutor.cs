@@ -21,7 +21,7 @@ class CodeLineExecutor
     private int forRepeatCount;
 
     private int compareValue1, compareValue2;
-    private CodeBlockType compareType;
+    private CodeBlockType compareType, cv1, cv2;
 
     public CodeLineExecutor(GameObject ui, BlockCodeExecutor ce) 
     {
@@ -192,6 +192,13 @@ class CodeLineExecutor
             if (compareType == CodeBlockType.Same)
             {
                 return c1 == c2;
+            }
+
+            if ((lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] != CodeBlockType.Count && lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] != CodeBlockType.CVariable) ||
+                (lineTextUI.GetComponent<CodeTextUI>().blockTypes[3] != CodeBlockType.Count && lineTextUI.GetComponent<CodeTextUI>().blockTypes[3] != CodeBlockType.CVariable))
+            {
+                ErrorOccured();
+                return false;
             }
             else if (compareType == CodeBlockType.Greater)
             {

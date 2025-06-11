@@ -54,5 +54,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        table.GetComponent<PlateTable>().ResetPlateOffset();
     }
 }
