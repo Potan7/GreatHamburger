@@ -10,7 +10,7 @@ namespace MapObject.Ingredients
     {
         public XRGrabInteractable interactable { get;  private set; }
         public Rigidbody rb { get; private set; }
-        public new Collider collider { get; private set; }
+        public Collider ingredientCollider { get; private set; }
 
         public event Action<PlayerIngredient> OnIngredientCollision = null;
         public event Action<PlayerIngredient> OnIngredientSelected = null;
@@ -21,11 +21,14 @@ namespace MapObject.Ingredients
         {
             interactable = GetComponent<XRGrabInteractable>();
             rb = GetComponent<Rigidbody>();
-            collider = GetComponent<Collider>();
+            ingredientCollider = GetComponent<Collider>();
 
             interactable.selectEntered.AddListener(OnSelected);
             interactable.selectExited.AddListener(OnDeselected);
+        }
 
+        void Start()
+        {
             OnIngredientSelected += PlayerManager.Instance.ItemSelected;
             OnIngredientDeselected += PlayerManager.Instance.ItemDeselected;
         }

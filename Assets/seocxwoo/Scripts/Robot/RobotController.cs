@@ -1,26 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
+// using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEditor.Recorder.OutputPath;
+// using static UnityEditor.Recorder.OutputPath;
 
 public class RobotController : MonoBehaviour
 {
-    // ÀÌµ¿ ½ÃÀÛ À§Ä¡, ¸ñÀûÁö À§Ä¡
+    // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
     Vector2Int startPoint = new Vector2Int();
     Vector2Int destPoint = new Vector2Int();
 
-    // ¸Ê(±×¸®µå) Á¤º¸°¡ ´ã±ä JsonÆÄÀÏ
+    // ï¿½ï¿½(ï¿½×¸ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ Jsonï¿½ï¿½ï¿½ï¿½
     public TextAsset stageJson;
 
-    // JsonÆÄÀÏ¿¡¼­ ÃßÃâÇÑ ±×¸®µå Á¤º¸
+    // Jsonï¿½ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private int width;
     private int height;
     private float cellSize;
     private int[,] grid;
 
-    // A* ¾Ë°í¸®ÁòÀ» ÀÌ¿ëÇÑ °æ·Î(¸®½ºÆ®)
+    // A* ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½Æ®)
     private List<Vector2Int> pathList;
 
     // Scripts
@@ -40,7 +40,7 @@ public class RobotController : MonoBehaviour
 
     void Start()
     {
-        // ¸Ê(±×¸®µå) Á¤º¸ ºÒ·¯¿À±â
+        // ï¿½ï¿½(ï¿½×¸ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         LoadStageGridData();
 
         // Initialization
@@ -48,13 +48,13 @@ public class RobotController : MonoBehaviour
         robotMovement.Initialize(width, cellSize);
         robotInteraction = GetComponent<RobotInteraction>();
 
-        // ÀÛµ¿ ½ÃÀÛ
+        // ï¿½Ûµï¿½ ï¿½ï¿½ï¿½ï¿½
         //StartCoroutine(RunRobotProgram());
     }
 
     void LoadStageGridData()
     {
-        // Json ÆÄÀÏ·ÎºÎÅÍ °ªÀ» ºÒ·¯¿Í ÀúÀå
+        // Json ï¿½ï¿½ï¿½Ï·Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         StageGridData data = JsonUtility.FromJson<StageGridData>(stageJson.text);
         width = data.width;
         height = data.height;
@@ -64,7 +64,7 @@ public class RobotController : MonoBehaviour
 
     private IEnumerator RunRobotProgram()
     {
-        // ·Îº¿ ½ÇÁ¦ ¿òÁ÷ÀÓÀÌ ÀÔ·ÂµÉ ÇÔ¼ö
+        // ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·Âµï¿½ ï¿½Ô¼ï¿½
 
         yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
@@ -134,17 +134,17 @@ public class RobotController : MonoBehaviour
 
     public IEnumerator MoveToNodeAndInteract(string name)
     {
-        // ·Îº¿ÀÌ ¹Ù»Ú¸é ´ë±â (¾Õ¼± µ¿ÀÛ ¼öÇà Áß)
+        // ï¿½Îºï¿½ï¿½ï¿½ ï¿½Ù»Ú¸ï¿½ ï¿½ï¿½ï¿½ (ï¿½Õ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
         while (isBusy)
         {
             yield return null;
         }
 
-        // ·Îº¿ÀÌ ÀÌµ¿ ÈÄ »óÈ£ÀÛ¿ëÇÏµµ·Ï ±¸¼º
+        // ï¿½Îºï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ ï¿½ï¿½È£ï¿½Û¿ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return StartCoroutine(MoveToNode(name));
         robotInteraction.Interact();
 
-        // Ãß°¡ÇÑ ³»¿ë (¾ÈÁ¤¼º ¹Ì°ËÁõ)
+        // ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì°ï¿½ï¿½ï¿½)
         while (isBusy)
         {
             yield return null;
@@ -155,38 +155,38 @@ public class RobotController : MonoBehaviour
     {
         Debug.Log("Robot move to " + name + ".");
 
-        // ¸ñÀûÁö Á¤º¸ ÀúÀå
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Transform destination = interactableRegistry.GetTransform(name);
 
-        // ·Îº¿ Ãâ¹ß À§Ä¡(±×¸®µå) ÁöÁ¤
+        // ï¿½Îºï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(ï¿½×¸ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
         startPoint = ChangePosToPoint(transform.position);
 
-        // ¸ñÀûÁö À§Ä¡(±×¸®µå) ÁöÁ¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(ï¿½×¸ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
         destPoint = ChangeDestPoint(destination);
 
-        // °æ·Î Å½»ö
+        // ï¿½ï¿½ï¿½ Å½ï¿½ï¿½
         pathList = AStarPathfinder.GetPathList(grid, width, height, startPoint, destPoint);
 
-        // ÀÌµ¿ ½ÃÀÛ
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         yield return StartCoroutine(robotMovement.MoveRobotToNode(pathList, destPoint, destination.rotation));
     }
 
     private Vector2Int ChangePosToPoint(Vector3 position)
     {
-        // ¿ÀºêÁ§Æ®ÀÇ position ÁÂÇ¥¸¦ ±×¸®µå°ªÀ¸·Î º¯°æ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ position ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½×¸ï¿½ï¿½å°ªï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Vector2Int vector2Int = new Vector2Int(Mathf.RoundToInt(position.x / cellSize), Mathf.RoundToInt(((height - 1) * cellSize - position.z) / cellSize));
         return vector2Int;
     }
 
     private Vector2Int ChangeDestPoint(Transform trans)
     {
-        // ¸ñÀûÁö À§Ä¡(±×¸®µå) ÁöÁ¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡(ï¿½×¸ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
         Vector2Int point = ChangePosToPoint(trans.position);
 
-        // ¸ñÀûÁö ¿ÀºêÁ§Æ®(³ëµå)°¡ ¹Ù¶óº¸´Â ¹æÇâ(°¢µµ) ÀúÀå
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®(ï¿½ï¿½ï¿½)ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½) ï¿½ï¿½ï¿½ï¿½
         int rot = Mathf.RoundToInt(trans.rotation.eulerAngles.y);
 
-        // ¹Ù¶óº¸´Â ¹æÇâ(¾ÕÄ­)À» ÁøÂ¥ ¸ñÀûÁö À§Ä¡·Î ÁöÁ¤(´Ù¹æÇâ Á¢±Ù ºÒ°¡)
+        // ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ä­)ï¿½ï¿½ ï¿½ï¿½Â¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½Ù¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½)
         int dx = point.x;
         int dy = point.y;
 

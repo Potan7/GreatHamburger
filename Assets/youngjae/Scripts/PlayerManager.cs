@@ -12,7 +12,18 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs;
 
 public class PlayerManager : MonoBehaviour
 {
-    public static PlayerManager Instance { get; private set; }
+    private static PlayerManager instance;
+    public static PlayerManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindFirstObjectByType<PlayerManager>();
+            }
+            return instance;
+        }
+    }
 
     public HashSet<PlayerIngredient> selectedIngredients = new HashSet<PlayerIngredient>();
 
@@ -26,9 +37,9 @@ public class PlayerManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
+        if (instance == null || instance == this)
         {
-            Instance = this;
+            instance = this;
             // player = GetComponent<XROrigin>();
 
             if (isFadeIn || canvas.activeSelf == true)

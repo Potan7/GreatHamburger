@@ -26,10 +26,23 @@ public class GoalObjGenetator : MonoBehaviour
 
     void Start()
     {
-        if (playerMapManager != null && goalText != null)
+        if (goalText != null)
         {
-            goalText.text = GetRecipeByTexts(playerMapManager.answerList);
+            if (playerMapManager != null)
+            {
+                goalText.text = GetRecipeByTexts(playerMapManager.answerList);
+            }
+            else
+            {
+                List<GameObject> childList = new List<GameObject>();
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    childList.Add(transform.GetChild(i).gameObject);
+                }
+                goalText.text = GetRecipeByTexts(childList);
+            }
         }
+
     }
 
     void Update()

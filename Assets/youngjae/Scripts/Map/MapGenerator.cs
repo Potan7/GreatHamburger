@@ -28,7 +28,8 @@ namespace Map
             {
                 if (!Application.isPlaying)
                 {
-                    Undo.DestroyObjectImmediate(transform.GetChild(0).gameObject);
+                    // Undo.DestroyObjectImmediate(transform.GetChild(0).gameObject);
+                    DestroyImmediate(transform.GetChild(0).gameObject);
                 }
                 else
                 {

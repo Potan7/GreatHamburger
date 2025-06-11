@@ -100,7 +100,7 @@ namespace Data
 
         public void ClearStage(int stageBuildIndex)
         {
-            if (stageBuildIndex < notStageCount || stageBuildIndex >= STAGE_COUNT + notStageCount)
+            if (stageBuildIndex <= notStageCount || stageBuildIndex >= STAGE_COUNT * 2 + notStageCount)
             {
                 Debug.LogError("Invalid stage index: " + stageBuildIndex);
                 return;
@@ -152,6 +152,16 @@ namespace Data
         private void OnApplicationQuit()
         {
             SaveDataContainer();
+        }
+
+        [ContextMenu("Debug: Set All Stages Clear")]
+        public void DebugSetAllClear()
+        {
+            for (int i = 0; i < CurrentDataContainer.StageClear.Length; i++)
+            {
+                CurrentDataContainer.StageClear[i] = true; // 모든 스테이지 클리어 상태를 true로 설정
+            }
+            SaveDataContainer(); // 변경 사항 저장
         }
         #endregion
     }
