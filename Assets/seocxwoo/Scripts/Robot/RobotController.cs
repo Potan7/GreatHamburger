@@ -221,5 +221,7 @@ public class RobotController : MonoBehaviour
         {
             Destroy(hand.GetChild(0).gameObject);
         }
+
+        interactableRegistry.GetTransform("Crate_Buns").GetComponent<CrateBuns>().ResetCount();
     }
 }

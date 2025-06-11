@@ -57,4 +57,9 @@ public class CrateBuns : MonoBehaviour, IInteractable
         Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
         Gizmos.DrawSphere(pos, 0.1f);
     }
+
+    public void ResetCount() 
+    {
+        count = 0;
+    }
 }
