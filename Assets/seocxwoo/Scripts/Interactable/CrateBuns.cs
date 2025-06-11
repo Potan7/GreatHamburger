@@ -29,6 +29,7 @@ public class CrateBuns : MonoBehaviour, IInteractable
         {
             Debug.LogWarning("Robot Already holding an item.");
 
+            robot.occurError.Invoke();
             // 에러 애니메이션 실행 후 종료
             robot.SetBusy(true);
             animator.SetTrigger("Error");
@@ -55,5 +56,10 @@ public class CrateBuns : MonoBehaviour, IInteractable
         Vector3 worldOffset = transform.rotation * localOffset;
         Vector3 pos = transform.position + worldOffset + new Vector3(0, 1f, 0);
         Gizmos.DrawSphere(pos, 0.1f);
+    }
+
+    public void ResetCount() 
+    {
+        count = 0;
     }
 }

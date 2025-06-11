@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.Events;
 using static UnityEditor.Recorder.OutputPath;
 
 public class RobotController : MonoBehaviour
@@ -30,6 +31,8 @@ public class RobotController : MonoBehaviour
     private Transform hand;
     private bool isBusy = false;
 
+    public UnityEvent occurError = new UnityEvent();
+
     void Awake()
     {
         hand = transform.Find("Hand");
@@ -46,7 +49,7 @@ public class RobotController : MonoBehaviour
         robotInteraction = GetComponent<RobotInteraction>();
 
         // 작동 시작
-        StartCoroutine(RunRobotProgram());
+        //StartCoroutine(RunRobotProgram());
     }
 
     void LoadStageGridData()
@@ -63,8 +66,10 @@ public class RobotController : MonoBehaviour
     {
         // 로봇 실제 움직임이 입력될 함수
 
-        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Lettuce"));
         //yield return StartCoroutine(MoveToNodeAndInteract("CuttingBoard"));
@@ -92,36 +97,42 @@ public class RobotController : MonoBehaviour
         //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
         //yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
 
-        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
-        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-        Debug.Log(WhatIsInHand());
-        yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
+        //yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //Debug.Log(WhatIsInHand());
+        //yield return StartCoroutine(MoveToNodeAndInteract("Trashcan"));
 
-        for (int i = 0; i < 2; i++)
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //    yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //}
+
+        //GameManager.instance.CheckResult();
+
+        //Time.timeScale = 20;
+
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    GameManager.instance.CleanPlate();
+        //    for (int j = 0; j < 2; j++)
+        //    {
+        //        yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
+        //        yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+        //    }
+        //    GameManager.instance.CheckResult();
+        //}
+
+        //Time.timeScale = 1;
+
+        if (GameManager.instance.CheckResult())
         {
-            yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-            yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
+            PlayerMapManager.Instance.PlateSuccess();
         }
-
-        GameManager.instance.CheckResult();
-
-        Time.timeScale = 20;
-
-        for (int i = 0; i < 5; i++)
-        {
-            GameManager.instance.CleanPlate();
-            for (int j = 0; j < 2; j++)
-            {
-                yield return StartCoroutine(MoveToNodeAndInteract("Crate_Buns"));
-                yield return StartCoroutine(MoveToNodeAndInteract("PlateTable"));
-            }
-            GameManager.instance.CheckResult();
-        }
-
-        Time.timeScale = 1;
+        yield break;
     }
 
-    private IEnumerator MoveToNodeAndInteract(string name)
+    public IEnumerator MoveToNodeAndInteract(string name)
     {
         // 로봇이 바쁘면 대기 (앞선 동작 수행 중)
         while (isBusy)
@@ -203,5 +214,14 @@ public class RobotController : MonoBehaviour
 
         itemIndex = hand.GetChild(0).gameObject.GetComponent<Ingredient>().GetIndex();
         return itemIndex;
+    }
+    public void CleanHand()
+    {
+        if (hand.childCount == 1)
+        {
+            Destroy(hand.GetChild(0).gameObject);
+        }
+
+        interactableRegistry.GetTransform("Crate_Buns").GetComponent<CrateBuns>().ResetCount();
     }
 }

@@ -1,54 +1,126 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 public class CodeBlockSlot : MonoBehaviour
 {
-    private bool isFull = false;
-    GameObject currentSlotBlock = null;
+    protected bool isFull = false;
+    public GameObject currentSlotBlock { get; private set; }
+    public CodeBlockType currentType { get; private set; }
 
-    public CodeBlock GetCodeContent() 
+    [SerializeField] private List<GameObject> subslots;
+    private void Awake()
+    {
+        currentSlotBlock = null;
+        for (int i = 0; i < subslots.Count; i++) 
+        {
+            subslots[i].SetActive(false);
+        }
+    }
+    public List<CodeBlock> GetCodeContent() 
     {
         if (currentSlotBlock == null) return null;
 
-        return currentSlotBlock.GetComponent<CodeBlock>();
+        List<CodeBlock> list = new();
+        list.Add(currentSlotBlock.GetComponent<CodeBlock>());
+
+        for (int i = 0; i < subslots.Count; i++)
+        {
+            List<CodeBlock> sub = subslots[i].GetComponent<CodeBlockSlot>().GetCodeContent();
+            if (sub != null && sub[0] != null)
+            {
+                list.Add(sub[0]);
+            }
+        }
+
+        return list;
     }
     void OnTriggerEnter(Collider other)
     {
         if (isFull) return;
         XRGrabInteractable grab = other.GetComponent<XRGrabInteractable>();
         if (grab == null) return;
+        if (!BlockCodingUIManager.instance.IsSentenceTypeBlock(grab.GetComponent<CodeBlock>().codeBlockType) 
+            && !BlockCodingUIManager.instance.IsVariableTypeBlock(grab.GetComponent<CodeBlock>().codeBlockType)) return;
+
+        SetBlockIntoSlot(grab);
+    }
+    protected void SetBlockIntoSlot(XRGrabInteractable grab) 
+    {
         var interactor = grab.firstInteractorSelecting;
         if (interactor == null) return;
         isFull = true;
         currentSlotBlock = grab.gameObject;
+        currentSlotBlock.GetComponent<CodeBlock>().currentSlot = this;
+        currentType = grab.GetComponent<CodeBlock>().codeBlockType;
 
         grab.GetComponent<CodeBlock>().StopAllCoroutines();
         grab.interactionManager.CancelInteractorSelection(interactor);
 
-        other.transform.position = transform.position;
-        other.transform.rotation = transform.rotation;
+        grab.transform.position = transform.position;
+        grab.transform.rotation = transform.rotation;
 
-        if (other.TryGetComponent<Rigidbody>(out var rb))
+        if (grab.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.isKinematic = true;
             rb.detectCollisions = true;
         }
 
-        grab.selectEntered.AddListener(evt =>
+        grab.selectEntered.AddListener(evt => { ResetSlot(); });
+
+        if (subslots.Count > 0)
         {
-            grab.selectEntered.RemoveAllListeners();
-            currentSlotBlock = null;
-            StartCoroutine(SlotCoolTime());
-        });
+            int cnt = NeededSubslotCount(currentType);
+            for (int i = 0; i < cnt; i++)
+            {
+                subslots[i].SetActive(true);
+            }
+        }
+
+        grab.GetComponent<CodeBlock>().SetBlockSize();
+        BlockCodingUIManager.instance.SetCodeWindow();
+    }
+    public void ResetSlot()
+    {
+        if (currentSlotBlock == null) return;
+        currentSlotBlock.GetComponent<XRGrabInteractable>().selectEntered.RemoveAllListeners();
+        currentSlotBlock.GetComponent<CodeBlock>().currentSlot = null;
+        currentSlotBlock = null;
+        for (int i = 0; i < subslots.Count; i++)
+        {
+            subslots[i].GetComponent<CodeBlockSlot>().ResetSlot();
+            subslots[i].SetActive(false);
+        }
+        StartCoroutine(SlotCoolTime());
+
+        BlockCodingUIManager.instance.SetCodeWindow();
     }
     IEnumerator SlotCoolTime() 
     {
         yield return new WaitForSeconds(1.0f);
         isFull = false;
         yield break;
+    }
+    private int NeededSubslotCount(CodeBlockType t) 
+    {
+        if (t == CodeBlockType.If ||
+            t == CodeBlockType.While
+            ) 
+        {
+            return 3;
+        } 
+        else if (t == CodeBlockType.Interact ||
+                 t == CodeBlockType.For ||
+                 t == CodeBlockType.CVariable ||
+                 t == CodeBlockType.IVariable ||
+                 t == CodeBlockType.NVariable) 
+        {
+            return 1;
+        }
+        return 0;
     }
 }
 
