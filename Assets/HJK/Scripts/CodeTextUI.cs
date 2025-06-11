@@ -10,6 +10,7 @@ public class CodeTextUI : MonoBehaviour
 
     private bool isRunning;
     private bool isError;
+    private readonly Color NormalColor = new Color(0, 0, 0, 0);
     private readonly Color RunningColor = new Color(1, 1, 0, 1);
     private readonly Color ErrorColor = new Color(1, 0, 0, 1);
     public List<CodeBlockType> blockTypes { get; private set; }
@@ -24,15 +25,34 @@ public class CodeTextUI : MonoBehaviour
         for (int i = 0; i < str.Count; i++)
         {
             string addText = str[i];
-            if (types[i] == CodeBlockType.Ingredient) 
+            if (types[i] == CodeBlockType.Ingredient)
             {
-                addText = BlockCodingUIManager.instance.ingredientList[int.Parse(str[i])];
+                BlockCodingUIManager.koreanBlockName.TryGetValue(BlockCodingUIManager.instance.ingredientList[int.Parse(str[i])], out var s);
+                addText = s;
             }
             else if (types[i] == CodeBlockType.Node)
             {
-                addText = BlockCodingUIManager.instance.nodeList[int.Parse(str[i])];
+                BlockCodingUIManager.koreanBlockName.TryGetValue(BlockCodingUIManager.instance.nodeList[int.Parse(str[i])], out var s);
+                addText = s;
             }
-            text += addText + " ";
+            else if (types[i] == CodeBlockType.Hand)
+            {
+                addText = "Ме";
+            }
+            else if (BlockCodingUIManager.instance.IsVariableTypeBlock(types[i])) 
+            {
+                if (i == 0) 
+                {
+                    addText = addText + "  =  ";
+                }
+                else
+                {
+                    BlockCodingUIManager.koreanBlockName.TryGetValue(types[i].ToString(), out var s);
+                    addText = s + addText;
+                } 
+
+            }
+            text += addText + "  ";
         }
         codeText.text = text;
 
@@ -40,12 +60,18 @@ public class CodeTextUI : MonoBehaviour
         isError = false;
     }
 
+    public void ResetTextColor()
+    {
+        codeBackground.GetComponent<Image>().color = NormalColor;
+        codeBackground.SetActive(false);
+    }
     public void EmphasizeRunningText(bool checkRunning) 
     {
         isRunning = checkRunning;
+        if (isError) return;
         codeBackground.SetActive(checkRunning);
 
-        Color c = new(0, 0, 0, 0);
+        Color c = NormalColor;
         if (isRunning) c = RunningColor;
         codeBackground.GetComponent<Image>().color = c;
     }
@@ -54,7 +80,7 @@ public class CodeTextUI : MonoBehaviour
         isError = checkError;
         codeBackground.SetActive(checkError);
 
-        Color c = new(0, 0, 0, 0);
+        Color c = NormalColor;
         if (isError) c = ErrorColor;
         codeBackground.GetComponent<Image>().color = c;
     }

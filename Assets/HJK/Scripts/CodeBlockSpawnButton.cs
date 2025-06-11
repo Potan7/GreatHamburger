@@ -9,7 +9,8 @@ public class CodeBlockSpawnButton : MonoBehaviour
 
     private void Start()
     {
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = codeBlockType.ToString();
+        BlockCodingUIManager.koreanBlockName.TryGetValue(codeBlockType.ToString(), out var str);
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = str;
     }
     public void OnButtonClick()
     {

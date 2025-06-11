@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject table;
     [SerializeField] private HamburgerData data;
     private List<int> recipe = new List<int>();
-    private Transform plate;
+    private Transform plate = null;
 
     public static GameManager instance = null;
 
@@ -24,14 +24,15 @@ public class GameManager : MonoBehaviour
         }
 
         recipe = data.ingredientList;
+        plate = table.transform.GetChild(0);
     }
 
-    public void CheckResult()
+    public bool CheckResult()
     {
         if (recipe.Count != plate.childCount)
         {
             Debug.LogWarning("Wrong Answer. Type 1");
-            return;
+            return false;
         }
 
         for (int i = 0; i < recipe.Count; i++)
@@ -39,11 +40,12 @@ public class GameManager : MonoBehaviour
             if (recipe[i] != plate.GetChild(i).GetComponent<Ingredient>().GetIndex())
             {
                 Debug.LogWarning("Wrong Answer. Type 2");
-                return;
+                return false;
             }
         }
 
         Debug.Log("Correct with Recipe.");
+        return true;
     }
 
     public void CleanPlate()

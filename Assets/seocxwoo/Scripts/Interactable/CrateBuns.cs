@@ -29,6 +29,7 @@ public class CrateBuns : MonoBehaviour, IInteractable
         {
             Debug.LogWarning("Robot Already holding an item.");
 
+            robot.occurError.Invoke();
             // 에러 애니메이션 실행 후 종료
             robot.SetBusy(true);
             animator.SetTrigger("Error");

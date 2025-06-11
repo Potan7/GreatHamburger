@@ -43,7 +43,8 @@ public class CodeBlockSlot : MonoBehaviour
         if (isFull) return;
         XRGrabInteractable grab = other.GetComponent<XRGrabInteractable>();
         if (grab == null) return;
-        if (!BlockCodingUIManager.instance.IsSentenceTypeBlock(grab.GetComponent<CodeBlock>().codeBlockType)) return;
+        if (!BlockCodingUIManager.instance.IsSentenceTypeBlock(grab.GetComponent<CodeBlock>().codeBlockType) 
+            && !BlockCodingUIManager.instance.IsVariableTypeBlock(grab.GetComponent<CodeBlock>().codeBlockType)) return;
 
         SetBlockIntoSlot(grab);
     }
@@ -70,12 +71,16 @@ public class CodeBlockSlot : MonoBehaviour
 
         grab.selectEntered.AddListener(evt => { ResetSlot(); });
 
-        int cnt = NeededSubslotCount(currentType);
-        for (int i = 0; i < cnt; i++)
+        if (subslots.Count > 0)
         {
-            subslots[i].SetActive(true);
+            int cnt = NeededSubslotCount(currentType);
+            for (int i = 0; i < cnt; i++)
+            {
+                subslots[i].SetActive(true);
+            }
         }
 
+        grab.GetComponent<CodeBlock>().SetBlockSize();
         BlockCodingUIManager.instance.SetCodeWindow();
     }
     public void ResetSlot()
@@ -108,7 +113,10 @@ public class CodeBlockSlot : MonoBehaviour
             return 3;
         } 
         else if (t == CodeBlockType.Interact ||
-                 t == CodeBlockType.For) 
+                 t == CodeBlockType.For ||
+                 t == CodeBlockType.CVariable ||
+                 t == CodeBlockType.IVariable ||
+                 t == CodeBlockType.NVariable) 
         {
             return 1;
         }

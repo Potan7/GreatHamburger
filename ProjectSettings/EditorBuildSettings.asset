@@ -9,35 +9,65 @@ EditorBuildSettings:
     path: Assets/Scenes/Mainmenu.unity
     guid: 2d2906c6060f32540a802e22d69fe445
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage1-1.unity
+    path: Assets/Scenes/Stage/Stage1_1.unity
     guid: 510a6f7b42fc88f43b79f59f6120d747
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage2-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage1_2.unity
+    guid: 39431411843ec1643af229960eed649f
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage2_1.unity
     guid: f391bd4f8ec6b4f42bb3558be7a657f1
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage3-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage2_2.unity
+    guid: bff0e16b8cc35fc4998cc995109d0a73
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage3_1.unity
     guid: d657ff670be01bb4ab0af18d24481474
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage4-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage3_2.unity
+    guid: 33425b27bf61ba149bd868ff41b5c996
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage4_1.unity
     guid: 4410915332a3db845a0480e3f0c4ad79
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage5-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage4_2.unity
+    guid: 051e0c4bc18d56749ac0144921c6b7b4
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage5_1.unity
     guid: 556a82bb1a897f041a3cd98548ad3e41
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage6-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage5_2.unity
+    guid: 6aa074542899b5443989037e75e2f69d
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage6_1.unity
     guid: dd4c9589b6c3cc8489541678f384daf3
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage7-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage6_2.unity
+    guid: 0ea0ee312994c2146b5abd90f151a1a2
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage7_1.unity
     guid: f1a37d11e9bbcf546a6d6403f8dd713f
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage8-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage7_2.unity
+    guid: 04d52ffce198c7946a8b64f5d6d76f53
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage8_1.unity
     guid: 595bf37b85817664b9856236458f588a
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage9-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage8_2.unity
+    guid: 8d232f1b10267984ba0f0ecdf1aa0e37
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage9_1.unity
     guid: 26beb6903ac5d0443a52c699a200c941
   - enabled: 1
-    path: Assets/Scenes/Stage/Stage10-1.unity
+    path: Assets/seocxwoo/Scenes/Stage/Stage9_2.unity
+    guid: 6f6a9573624b2754e868a2e00e1d6a2c
+  - enabled: 1
+    path: Assets/Scenes/Stage/Stage10_1.unity
     guid: 5543b56889220684b93f5c0817b4268a
+  - enabled: 1
+    path: Assets/seocxwoo/Scenes/Stage/Stage10_2.unity
+    guid: d04196f7360f55746835c7ed2ec59ae6
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}

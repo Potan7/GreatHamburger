@@ -43,13 +43,26 @@ class CodeLineExecutor
         }
         else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
         {
-            compareValue1 = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
-            compareValue2 = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[3]);
+            if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] == CodeBlockType.Hand || 
+                BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1]))
+            {
+                compareValue1 = -1;
+            }
+            else
+            {
+                compareValue1 = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+            }
+            if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[3] == CodeBlockType.Hand ||
+                BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[3]))
+            {
+                compareValue2 = -1;
+            }
+            else
+            {
+                compareValue2 = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[3]);
+            }
 
-            string compareOperator = lineTextUI.GetComponent<CodeTextUI>().currentTexts[2];
-            if (compareOperator == "==") compareType = CodeBlockType.Same;
-            else if (compareOperator == ">") compareType = CodeBlockType.Greater;
-            else if (compareOperator == "<") compareType = CodeBlockType.Less;
+            compareType = lineTextUI.GetComponent<CodeTextUI>().blockTypes[2];
         }
     }
     public void SetNextCodeIndex(int nidx, int cnidx = -1)
@@ -61,11 +74,91 @@ class CodeLineExecutor
     public void ExecuteLine()
     {
         isCooltimeEnd = false;
+        isWorkEnd = false;
+
+        FillVariable();
 
         lineTextUI.GetComponent<CodeTextUI>().EmphasizeRunningText(true);
         codeExecutor.StartCoroutine(BasicCoolDownRoutine());
     }
-    public void EndLine() 
+    private int GetVariableIndex(string str) 
+    {
+        return char.Parse(str.Substring(str.Length - 1)) - 'A';
+    }
+    private void FillVariable()
+    {
+        if (BlockCodingUIManager.instance.IsVariableTypeBlock(blockType))
+        {
+            int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[0]);
+            if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] == CodeBlockType.Hand)
+            {
+                int hand = codeExecutor.GetCurrentHoldingIngredientIndex();
+                if (hand == -1) ErrorOccured();
+                codeExecutor.SetDynamicVariable(CodeBlockType.Ingredient, idx, hand);
+            }
+            else
+            {
+                int value = -1;
+                if (BlockCodingUIManager.instance.IsValueTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1]))
+                {
+                    value = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+                }
+                else if (BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1]))
+                {
+                    int content = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+                    value = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], content);
+                    if (value == -1) ErrorOccured();
+                }
+
+                codeExecutor.SetDynamicVariable(blockType, idx, value);
+            }
+        }
+
+        if (blockType == CodeBlockType.Interact && nodeIndex == -1)
+        {
+            int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+            nodeIndex = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], idx);
+            if (nodeIndex == -1) ErrorOccured();
+        }
+        else if (blockType == CodeBlockType.For && forRepeatCount == -1)
+        {
+            int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+            forRepeatCount = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], idx);
+            if (forRepeatCount == -1) ErrorOccured();
+        }
+        else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
+        {
+            if (compareValue1 == -1)
+            {
+                if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] == CodeBlockType.Hand)
+                {
+                    compareValue1 = codeExecutor.GetCurrentHoldingIngredientIndex();
+                    if (compareValue1 == -1) ErrorOccured();
+                }
+                else if (BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1]))
+                {
+                    int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+                    compareValue1 = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], idx);
+                    if (compareValue1 == -1) ErrorOccured();
+                }
+            }
+            else if (compareValue2 == -1)
+            {
+                if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[3] == CodeBlockType.Hand)
+                {
+                    compareValue2 = codeExecutor.GetCurrentHoldingIngredientIndex();
+                    if (compareValue2 == -1) ErrorOccured();
+                }
+                else if (BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[3]))
+                {
+                    int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[3]);
+                    compareValue2 = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[3], idx);
+                    if (compareValue2 == -1) ErrorOccured();
+                }
+            }
+        }
+    }
+    public void EndLine()
     {
         if (isCooltimeEnd && isWorkEnd) 
         {
@@ -76,7 +169,7 @@ class CodeLineExecutor
                 idx = conditionalNextIndex;
                 InitArgs();
             }
-            else 
+            else if (blockType == CodeBlockType.For)
             {
                 forRepeatCount--;
             }
@@ -91,19 +184,22 @@ class CodeLineExecutor
         }
         else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
         {
-            //compareValue 중 손에 든 것은 어떻게 처리? 고민 좀 해봐야 함
+            int c1 = compareValue1;
+            int c2 = compareValue2;
+            //if (c1 == -1) c1 = codeExecutor.GetCurrentHoldingIngredientIndex();
+            //if (c2 == -1) c2 = codeExecutor.GetCurrentHoldingIngredientIndex();
 
-            if (compareType == CodeBlockType.Same) 
+            if (compareType == CodeBlockType.Same)
             {
-                return compareValue1 == compareValue2;
+                return c1 == c2;
             }
             else if (compareType == CodeBlockType.Greater)
             {
-                return compareValue1 > compareValue2;
+                return c1 > c2;
             }
             else if (compareType == CodeBlockType.Less)
             {
-                return compareValue1 < compareValue2;
+                return c1 < c2;
             }
         }
 
@@ -118,9 +214,14 @@ class CodeLineExecutor
         yield break;
     }
 
-    public void Shutdown()
+    public void ErrorOccured()
     {
+        Debug.Log("블록코딩 런타임 오류");
         lineTextUI.GetComponent<CodeTextUI>().EmphasizeErrorText(true);
+    }
+    public void ResetLine()
+    {
+        lineTextUI.GetComponent<CodeTextUI>().ResetTextColor();
     }
 }
 
@@ -130,6 +231,11 @@ public class BlockCodeExecutor : MonoBehaviour
     private CodeLineExecutor currentExecutedLine;
 
     private GameObject cookingRobot;
+    private bool isCodeRunning = false;
+
+    private int[] cValues = new int[BlockCodingUIManager.VAR_LIMIT_CNT];
+    private int[] iValues = new int[BlockCodingUIManager.VAR_LIMIT_CNT];
+    private int[] nValues = new int[BlockCodingUIManager.VAR_LIMIT_CNT];
     public void InitBlockCodeExecutor(List<GameObject> blocks, GameObject bot)
     {
         lineExes = new List<CodeLineExecutor>();
@@ -168,13 +274,13 @@ public class BlockCodeExecutor : MonoBehaviour
 
                 if (stack.Count == 0)
                 {
-                    Debug.LogError("블록코딩 신텍스 오류 - 닫는 블록에 대응할 열기 블록이 없습니다. Line: " + i);
+                    Debug.Log("블록코딩 신텍스 오류 - 닫는 블록에 대응할 열기 블록이 없습니다. Line: " + i);
                     return;
                 }
                 var t = stack.Pop();
                 if ((type - t.Item2) != 1)
                 {
-                    Debug.LogError("블록코딩 신텍스 오류 - 블록 쌍의 순서가 올바르지 않습니다. Line: " + i);
+                    Debug.Log("블록코딩 신텍스 오류 - 블록 쌍의 순서가 올바르지 않습니다. Line: " + i);
                     return;
                 }
 
@@ -207,28 +313,51 @@ public class BlockCodeExecutor : MonoBehaviour
 
         if (stack.Count > 0)
         {
-            Debug.LogError("블록코딩 신텍스 오류 - 닫히지 않은 열기 블록이 있습니다.");
+            Debug.Log("블록코딩 신텍스 오류 - 닫히지 않은 열기 블록이 있습니다.");
             return;
         }
     }
 
     public void StartCode(GameObject robot)
     {
+        if (isCodeRunning) return;
+        isCodeRunning = true;
         cookingRobot = robot;
 
-        Debug.LogError("코드 실행 시작");
+        robot.GetComponent<RobotController>().occurError.RemoveAllListeners();
+        robot.GetComponent<RobotController>().occurError.AddListener(OccurInteractionError);
+
+        foreach (var l in lineExes) 
+        {
+            l.ResetLine();
+        }
+        GameManager.instance.CleanPlate();
+        robot.GetComponent<RobotController>().CleanHand();
+
+        for (int i = 0; i < BlockCodingUIManager.VAR_LIMIT_CNT; i++)
+        {
+            cValues[i] = -1;
+            iValues[i] = -1;
+            nValues[i] = -1;
+        }
+
+        Debug.Log("코드 실행 시작");
         StartNextCode(0);
     }
     private void EndCode()
     {
-        Debug.LogError("코드 실행 종료");
-        //할게있나??
+        Debug.Log("코드 실행 종료");
+        isCodeRunning = false;
+        if (GameManager.instance.CheckResult()) 
+        {
+            PlayerMapManager.Instance.PlateSuccess();
+        }
     }
     public void StartNextCode(int nextIdx) 
     {
         if (nextIdx < 0) 
         {
-            Debug.LogError("블록코딩 신텍스 에러 - 코드 흐름이 정상적이지 않습니다.");
+            Debug.Log("블록코딩 신텍스 에러 - 코드 흐름이 정상적이지 않습니다.");
             return;
         }
         if (nextIdx >= lineExes.Count) 
@@ -245,24 +374,40 @@ public class BlockCodeExecutor : MonoBehaviour
         if (line.blockType == CodeBlockType.Interact)
         {
             yield return cookingRobot.GetComponent<RobotController>().StartCoroutine(cookingRobot.GetComponent<RobotController>().MoveToNodeAndInteract(BlockCodingUIManager.instance.nodeList[line.nodeIndex]));
-            line.isWorkEnd = true;
         }
         EndWork();
         yield break;
     }
     public void EndWork() 
     {
+        currentExecutedLine.isWorkEnd = true;
         currentExecutedLine.EndLine();
     }
-    public void GetCurrentHoldingIngredient() 
+    public int GetCurrentHoldingIngredientIndex() 
     {
-        //조건 체크용 기능 필요
-        //robot에서 현재 든 재료 참조 필요
+        return cookingRobot.GetComponent<RobotController>().WhatIsInHand();
     }
     public void OccurInteractionError() 
     {
-        currentExecutedLine.Shutdown();
-        StopAllCoroutines();
+        currentExecutedLine.ErrorOccured();
     }
 
+    public void SetDynamicVariable(CodeBlockType type, int idx, int value)
+    {
+        if (idx >= BlockCodingUIManager.VAR_LIMIT_CNT || idx < 0) return;
+
+        if (type == CodeBlockType.CVariable) cValues[idx] = value;
+        else if (type == CodeBlockType.IVariable) iValues[idx] = value;
+        else if (type == CodeBlockType.NVariable) nValues[idx] = value;
+    }
+    public int GetDynamicVariable(CodeBlockType type, int idx) 
+    {
+        if (idx >= BlockCodingUIManager.VAR_LIMIT_CNT || idx < 0) return -2;
+
+        if (type == CodeBlockType.CVariable) return cValues[idx];
+        else if (type == CodeBlockType.IVariable) return iValues[idx];
+        else if (type == CodeBlockType.NVariable) return nValues[idx];
+
+        return -2;
+    }
 }
