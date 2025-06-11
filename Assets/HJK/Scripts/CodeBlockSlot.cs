@@ -9,7 +9,7 @@ public class CodeBlockSlot : MonoBehaviour
 {
     protected bool isFull = false;
     public GameObject currentSlotBlock { get; private set; }
-    public CodeBlockType currentType { get; private set; }
+    public CodeBlockType currentType/* { get; private set; }*/;
 
     [SerializeField] private List<GameObject> subslots;
     private void Awake()
@@ -69,7 +69,7 @@ public class CodeBlockSlot : MonoBehaviour
             rb.detectCollisions = true;
         }
 
-        grab.selectEntered.AddListener(evt => { ResetSlot(); });
+        grab.selectEntered.AddListener(ResetSlot);
 
         if (subslots.Count > 0)
         {
@@ -83,15 +83,15 @@ public class CodeBlockSlot : MonoBehaviour
         grab.GetComponent<CodeBlock>().SetBlockSize();
         BlockCodingUIManager.instance.SetCodeWindow();
     }
-    public void ResetSlot()
+    public void ResetSlot(SelectEnterEventArgs e)
     {
         if (currentSlotBlock == null) return;
-        currentSlotBlock.GetComponent<XRGrabInteractable>().selectEntered.RemoveAllListeners();
+        currentSlotBlock.GetComponent<XRGrabInteractable>().selectEntered.RemoveListener(ResetSlot);
         currentSlotBlock.GetComponent<CodeBlock>().currentSlot = null;
         currentSlotBlock = null;
         for (int i = 0; i < subslots.Count; i++)
         {
-            subslots[i].GetComponent<CodeBlockSlot>().ResetSlot();
+            subslots[i].GetComponent<CodeBlockSlot>().ResetSlot(null);
             subslots[i].SetActive(false);
         }
         StartCoroutine(SlotCoolTime());
@@ -102,6 +102,10 @@ public class CodeBlockSlot : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         isFull = false;
+        for (int i = 0; i < subslots.Count; i++)
+        {
+            subslots[i].GetComponent<CodeBlockSlot>().isFull = false;
+        }
         yield break;
     }
     private int NeededSubslotCount(CodeBlockType t) 
