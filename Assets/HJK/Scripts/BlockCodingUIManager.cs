@@ -69,6 +69,7 @@ public class BlockCodingUIManager : MonoBehaviour
         return codeBlocks;
     }
 
+    const string IDT = "      ";
     public void SetCodeWindow() 
     {
         if (!codeWindow.activeSelf) return;
@@ -85,13 +86,13 @@ public class BlockCodingUIManager : MonoBehaviour
                     codeBlocks[i][0].codeBlockType == CodeBlockType.EndIf ||
                     codeBlocks[i][0].codeBlockType == CodeBlockType.EndWhile)
                 {
-                    if (indent == "      ")
+                    if (indent == IDT)
                     {
                         indent = "";
                     }
                     else
                     {
-                        indent = indent.Substring(indent.Length - 2);
+                        indent = indent.Substring(indent.Length - IDT.Length);
                     }
                 }
 
@@ -120,7 +121,7 @@ public class BlockCodingUIManager : MonoBehaviour
                     codeBlocks[i][0].codeBlockType == CodeBlockType.If ||
                     codeBlocks[i][0].codeBlockType == CodeBlockType.While) 
                 {
-                    indent += "      ";
+                    indent += IDT;
                 }
             }
         }

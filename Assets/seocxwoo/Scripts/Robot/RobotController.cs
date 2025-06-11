@@ -32,6 +32,7 @@ public class RobotController : MonoBehaviour
     private bool isBusy = false;
 
     public UnityEvent occurError = new UnityEvent();
+    public UnityEvent handsFree = new UnityEvent();
 
     void Awake()
     {
@@ -212,7 +213,7 @@ public class RobotController : MonoBehaviour
             return -1;
         }
 
-        itemIndex = hand.GetChild(0).gameObject.GetComponent<Ingredient>().GetIndex();
+        itemIndex = interactableRegistry.GetIngredientIndex(hand.GetChild(0).GetComponent<Ingredient>().GetName());
         return itemIndex;
     }
     public void CleanHand()

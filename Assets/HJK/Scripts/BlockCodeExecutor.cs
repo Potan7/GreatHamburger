@@ -19,17 +19,17 @@ class CodeLineExecutor
 
     public int nodeIndex { get; private set; }
     private int forRepeatCount;
+    private bool isForRepeating;
 
     private int compareValue1, compareValue2;
-    private CodeBlockType compareType, cv1, cv2;
+    private CodeBlockType compareType;
 
     public CodeLineExecutor(GameObject ui, BlockCodeExecutor ce) 
     {
         lineTextUI = ui;
         blockType = ui.GetComponent<CodeTextUI>().blockTypes[0];
         codeExecutor = ce;
-
-        InitArgs();
+        isForRepeating = false;
     }
     private void InitArgs() 
     {
@@ -37,13 +37,14 @@ class CodeLineExecutor
         {
             nodeIndex = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
         }
-        else if (blockType == CodeBlockType.For)
+        else if (blockType == CodeBlockType.For && !isForRepeating)
         {
             forRepeatCount = int.Parse(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
+            if (forRepeatCount != -1) isForRepeating = true;
         }
-        else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
+        if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
         {
-            if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] == CodeBlockType.Hand || 
+            if (lineTextUI.GetComponent<CodeTextUI>().blockTypes[1] == CodeBlockType.Hand ||
                 BlockCodingUIManager.instance.IsVariableTypeBlock(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1]))
             {
                 compareValue1 = -1;
@@ -76,6 +77,7 @@ class CodeLineExecutor
         isCooltimeEnd = false;
         isWorkEnd = false;
 
+        InitArgs();
         FillVariable();
 
         lineTextUI.GetComponent<CodeTextUI>().EmphasizeRunningText(true);
@@ -120,11 +122,13 @@ class CodeLineExecutor
             nodeIndex = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], idx);
             if (nodeIndex == -1) ErrorOccured();
         }
-        else if (blockType == CodeBlockType.For && forRepeatCount == -1)
+        else if (blockType == CodeBlockType.For && forRepeatCount == -1 && !isForRepeating)
         {
             int idx = GetVariableIndex(lineTextUI.GetComponent<CodeTextUI>().currentTexts[1]);
             forRepeatCount = codeExecutor.GetDynamicVariable(lineTextUI.GetComponent<CodeTextUI>().blockTypes[1], idx);
             if (forRepeatCount == -1) ErrorOccured();
+
+            if (forRepeatCount != -1) isForRepeating = true;
         }
         else if (blockType == CodeBlockType.If || blockType == CodeBlockType.While)
         {
@@ -163,16 +167,19 @@ class CodeLineExecutor
         if (isCooltimeEnd && isWorkEnd) 
         {
             lineTextUI.GetComponent<CodeTextUI>().EmphasizeRunningText(false);
+
             int idx = nextIndex;
             if (!isConditionFullfill())
             {
                 idx = conditionalNextIndex;
-                InitArgs();
+                isForRepeating = false;
             }
-            else if (blockType == CodeBlockType.For)
+
+            if (isForRepeating && blockType == CodeBlockType.For)
             {
                 forRepeatCount--;
             }
+
             codeExecutor.StartNextCode(idx);
         }
     }
@@ -189,6 +196,7 @@ class CodeLineExecutor
             //if (c1 == -1) c1 = codeExecutor.GetCurrentHoldingIngredientIndex();
             //if (c2 == -1) c2 = codeExecutor.GetCurrentHoldingIngredientIndex();
 
+            //Debug.LogError(c1 + " / " + c2);
             if (compareType == CodeBlockType.Same)
             {
                 return c1 == c2;

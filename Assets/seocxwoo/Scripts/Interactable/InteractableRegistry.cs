@@ -63,4 +63,12 @@ public class InteractableRegistry : MonoBehaviour
         }
         return str;
     }
+    public int GetIngredientIndex(string name)
+    {
+        for (int i = 0; i < ingredient.Count; i++) 
+        {
+            if (ingredient[i].ingredientName == name) return i;
+        }
+        return -1;
+    }
 }
