@@ -275,6 +275,7 @@ public class BlockCodingUIManager : MonoBehaviour
         { "Crate_Cheese", "치즈 상자"  },
         { "Crate_Lettuce", "양상추 상자"  },
         { "Crate_Tomatoes", "토마토 상자"  },
+        { "Crate_Random", "랜덤 상자"  },
         { "Crate_Random_A", "랜덤 상자 A"  },
         { "Crate_Random_B", "랜덤 상자 B"  },
         { "CuttingBoard", "도마"  },
