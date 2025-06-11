@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &4525909558109425473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1369,6 +1369,10 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5829042851767380253}
+  - {fileID: 8938945118940915915}
+  - {fileID: 3290115834431593353}
+  - {fileID: 5247687665861254485}
+  - {fileID: 498170255755968488}
   - {fileID: 3628426552322214772}
   - {fileID: 7130383305168878080}
   - {fileID: 2388368864123667324}
@@ -1380,10 +1384,6 @@ RectTransform:
   - {fileID: 4634878004501407295}
   - {fileID: 3360023006863171647}
   - {fileID: 533628277976890702}
-  - {fileID: 8938945118940915915}
-  - {fileID: 3290115834431593353}
-  - {fileID: 5247687665861254485}
-  - {fileID: 498170255755968488}
   - {fileID: 1547080824980394479}
   - {fileID: 120830893417002425}
   - {fileID: 8328737734389697448}
