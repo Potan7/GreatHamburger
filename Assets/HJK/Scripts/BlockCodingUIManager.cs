@@ -46,9 +46,9 @@ public class BlockCodingUIManager : MonoBehaviour
             nodeList = mapInfo.GetNodeInfos();
             //Debug.LogError(nodeList.Count);
         }
-        for (int i = 0; i < blockContent.transform.childCount; i++) 
+        for (int i = 0; i < blockContent.transform.childCount; i++)
         {
-            if (mapInfo.stageNumber < blockActiveLevel[i])
+            if (mapInfo.stageNumber < blockActiveLevel.GetValueOrDefault(blockContent.transform.GetChild(i).GetComponent<CodeBlockSpawnButton>().codeBlockType))
             {
                 blockContent.transform.GetChild(i).gameObject.SetActive(false);
             }
@@ -70,7 +70,7 @@ public class BlockCodingUIManager : MonoBehaviour
     }
 
     const string IDT = "      ";
-    public void SetCodeWindow() 
+    public void SetCodeWindow()
     {
         if (!codeWindow.activeSelf) return;
 
@@ -103,7 +103,7 @@ public class BlockCodingUIManager : MonoBehaviour
                 {
                     mainBlock = koreanBlockName.GetValueOrDefault(codeBlocks[i][0].codeBlockType.ToString());
                 }
-                else 
+                else
                 {
                     mainBlock = koreanBlockName.GetValueOrDefault(codeBlocks[i][0].codeBlockType.ToString()) + codeBlocks[i][0].GetContents();
                 }
@@ -119,7 +119,7 @@ public class BlockCodingUIManager : MonoBehaviour
 
                 if (codeBlocks[i][0].codeBlockType == CodeBlockType.For ||
                     codeBlocks[i][0].codeBlockType == CodeBlockType.If ||
-                    codeBlocks[i][0].codeBlockType == CodeBlockType.While) 
+                    codeBlocks[i][0].codeBlockType == CodeBlockType.While)
                 {
                     indent += IDT;
                 }
@@ -138,7 +138,7 @@ public class BlockCodingUIManager : MonoBehaviour
         return blockCodes;
     }
 
-    public void OnClickChangeWindowButton(int mode) 
+    public void OnClickChangeWindowButton(int mode)
     {
         bool isOnBlockWindow = (mode == 1);
         blockWindow.SetActive(isOnBlockWindow);
@@ -215,32 +215,33 @@ public class BlockCodingUIManager : MonoBehaviour
             "Ingredient Value",
             "Node Value",
         };
-    private int[] blockActiveLevel =
-        {
-            1,
+    private Dictionary<CodeBlockType, int> blockActiveLevel = new Dictionary<CodeBlockType, int>
+    {
+        { CodeBlockType.Interact, 1},
 
-            5,
-            5,
-            6,
-            6,
-            7,
-            7,
+        { CodeBlockType.For, 5},
+        { CodeBlockType.EndFor, 5},
+        { CodeBlockType.If, 6},
+        { CodeBlockType.EndIf, 6},
+        { CodeBlockType.While, 7},
+        { CodeBlockType.EndWhile, 7},
 
-            7,
-            7,
+        { CodeBlockType.Break, 7},
+        { CodeBlockType.Continue, 7},
 
-            6,
-            6,
-            6,
+        { CodeBlockType.Same, 6},
+        { CodeBlockType.Greater, 6},
+        { CodeBlockType.Less, 6},
 
-            5,
-            6,
-            1,
-            6,
+        { CodeBlockType.Count, 5},
+        { CodeBlockType.Ingredient, 6},
+        { CodeBlockType.Node, 1},
 
-            10,
-            10,
-            10,
+        { CodeBlockType.Hand, 6},
+
+        { CodeBlockType.CVariable, 10},
+        { CodeBlockType.IVariable, 10},
+        { CodeBlockType.NVariable, 10},
     };
     public static Dictionary<string, string> koreanBlockName = new Dictionary<string, string>
     {
