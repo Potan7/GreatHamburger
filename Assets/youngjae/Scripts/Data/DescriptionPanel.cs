@@ -81,13 +81,16 @@ namespace Data
 
         async UniTask ShowDescriptionText()
         {
-            // StreamingAssets에서 텍스트 파일을 읽어오기
-            string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "StageDescription", textName + ".json");
+            // StreamingAssets에서 텍스트 파일을 읽어오기 -> 취소
+            // string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "StageDescription", textName + ".json");
 
-            if (System.IO.File.Exists(filePath))
+            // Resources 폴더에서 JSON 파일을 읽어오기
+            string filePath = $"StageDescription/{textName}";
+            TextAsset textAsset = Resources.Load<TextAsset>(filePath);
+
+            if (textAsset != null)
             {
-                string json = await System.IO.File.ReadAllTextAsync(filePath);
-                descriptionTextList = JsonUtility.FromJson<DescriptionTextList>(json);
+                descriptionTextList = JsonUtility.FromJson<DescriptionTextList>(textAsset.text);
             }
             else
             {
