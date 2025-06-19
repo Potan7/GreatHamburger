@@ -5107,6 +5107,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4084501578506508763, guid: 28de819e8f00961488406d808ca06c2e, type: 3}
   m_PrefabInstance: {fileID: 1739286626}
   m_PrefabAsset: {fileID: 0}
+--- !u!20 &1739286629 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 14286768404484565, guid: 28de819e8f00961488406d808ca06c2e, type: 3}
+  m_PrefabInstance: {fileID: 1739286626}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1741655531
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7521,6 +7526,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5116245044260215051, guid: 9577f19add0a70c48ba1e1840b3e23fb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00024414062
+      objectReference: {fileID: 0}
     - target: {fileID: 5238268597790639589, guid: 9577f19add0a70c48ba1e1840b3e23fb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -7704,6 +7713,10 @@ PrefabInstance:
     - target: {fileID: 7716750723284293215, guid: 9577f19add0a70c48ba1e1840b3e23fb, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7716750723284293215, guid: 9577f19add0a70c48ba1e1840b3e23fb, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00018310547
       objectReference: {fileID: 0}
     - target: {fileID: 8050721866941871631, guid: 9577f19add0a70c48ba1e1840b3e23fb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8488,6 +8501,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5860035024658803365, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
+      propertyPath: targetCamera
+      value: 
+      objectReference: {fileID: 1739286629}
     - target: {fileID: 6579236153830433576, guid: 7739dce289fdb3b4f852090632b9d97c, type: 3}
       propertyPath: m_Name
       value: Robot
