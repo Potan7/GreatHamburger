@@ -690,6 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7f9f46d7587dbc4eb5e25098a11ebbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetCamera: {fileID: 0}
 --- !u!1 &6579236153830433576
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,6 +766,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageJson: {fileID: 4900000, guid: 4bb8b45fc9db7f34d8bea5b48a369547, type: 3}
   interactableRegistry: {fileID: 0}
+  occurError:
+    m_PersistentCalls:
+      m_Calls: []
+  handsFree:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3414472825359951064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -777,8 +784,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93b3d70c2df3a964e9a9a87e7854aee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotationSpeed: 180
+  moveSpeed: 10
+  rotationSpeed: 270
 --- !u!114 &369697691864181779
 MonoBehaviour:
   m_ObjectHideFlags: 0
